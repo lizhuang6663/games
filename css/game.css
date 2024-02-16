@@ -1,0 +1,100 @@
+.whole-box {
+    width: 100%;
+    background-color: #f6f6f6;
+
+}
+
+.clock-box {
+    margin: 0 auto;
+    height: 85px;
+    background-color: #b52f2f;
+}
+
+.clock img {
+    width: 60px;
+    height: 60px;
+    float: left;
+    margin-top: 12px;
+    margin-left: 35px;
+    border-radius: 50%;
+}
+
+.countdown-box {
+    height: 45px;
+    width: 275px;
+    background-color: #1e80ca;
+    float: left;
+
+    margin-top: 20px;
+}
+
+.image img {
+    width: 50px;
+    height: 50px;
+}
+
+.plate-box {
+    height: 410px;
+    background-color: rgb(179, 112, 146);
+    overflow: auto;
+}
+
+.plate {
+    display: grid;
+    width: 300px;
+    height: 300px;
+    background-color: #fff;
+    margin: 0 auto;
+    margin-top: 50px;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    row-gap: 3px;
+    column-gap: 3px;
+}
+
+.item {
+    background-color: #b9e275;
+    font-size: 30px;
+    line-height: 74px;
+}
+
+.mybox {
+    height: 150px;
+    background-color: #5bbe90;
+    overflow: auto;
+}
+
+.character-box {
+    display: flex;
+    height: 75px;
+    width: 330px;
+    background-color: #9ea4dc;
+    margin: 0 auto;
+    margin-top: 38px;
+    justify-content: space-between;
+
+}
+
+.character {
+    width: 75px;
+    height: 75px;
+    background-color: #67ced6;
+    /* margin-left: 1px; */
+}
+
+.score-box {
+    height: 156px;
+    background-color: #8ae28f;
+}
+
+.score-title {
+    float: left;
+}
+
+.score {
+    float: left;
+}
+
+.image {
+    float: right;
+}
