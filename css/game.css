@@ -20,20 +20,28 @@
 }
 
 .countdown-box {
+    border: #1c478e solid 2px;
     height: 45px;
     width: 275px;
-    background-color: #1e80ca;
+    background-color: #fff;
     float: left;
-
     margin-top: 20px;
 }
 
+.countdown {
+    background-color: #53adda;
+    height: 100%;
+    width: 270px;
+    transition: width 0.5s;
+}
+
 .image img {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
 }
 
 .plate-box {
+    position: relative;
     height: 410px;
     background-color: rgb(179, 112, 146);
     overflow: auto;
@@ -41,8 +49,8 @@
 
 .plate {
     display: grid;
-    width: 300px;
-    height: 300px;
+    width: 310px;
+    height: 310px;
     background-color: #fff;
     margin: 0 auto;
     margin-top: 50px;
@@ -56,6 +64,7 @@
     background-color: #b9e275;
     font-size: 30px;
     line-height: 74px;
+    text-align: center;
 }
 
 .mybox {
@@ -82,19 +91,46 @@
     /* margin-left: 1px; */
 }
 
-.score-box {
+footer {
     height: 156px;
     background-color: #8ae28f;
+    padding-top: 30px;
+    padding-left: 105px;
+}
+
+.score-box {
+    display: flex;
+    font-size: 17px;
+    text-align: center;
+    line-height: 40px;
 }
 
 .score-title {
-    float: left;
+    width: 50px;
+    height: 40px;
+    background-color: #50d0bd;
+    margin-top: 10px;
+
 }
 
 .score {
-    float: left;
+    margin-top: 10px;
+    width: 50px;
+    height: 40px;
+    background-color: #1c478e;
 }
 
-.image {
-    float: right;
+.image img {
+    border-radius: 50%;
+}
+
+.start-sign {
+    /* display: none; */
+    background-color: #fff;
+    color: #b52f2f;
+    position: absolute;
+    bottom: 100px;
+    font-size: 55px;
+    left: 50%;
+    transform: translateX(-50%);
 }
