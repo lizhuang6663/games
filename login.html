@@ -131,16 +131,16 @@
 </body>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
-    var userId = $('.user-id').value
-    var password = $('.psw').value
+    // var userId = $('.user-id').value
+    // var password = $('.psw').value
 
     function loginTurnToPage() {
         axios({
             url: 'http://localhost:8090/login',
             method: 'post',
             data: {
-                userId,
-                password
+                userId: '123',
+                password: '@111'
             }
 
         }).then(result => {
