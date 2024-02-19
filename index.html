@@ -154,7 +154,7 @@
 
         function loginTurnToPage() {
             var userId = $('#user-id').value
-            var password = $('#psw').value
+            var password = String($('#psw').value)
             // console.log(userId);
             // let user = new User(userId, password, 0, 0);
             // // console.log(user);
