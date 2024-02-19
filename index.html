@@ -160,12 +160,17 @@
             // console.log(user);
 
             let loginMes = new Message("LoginMes", JSON.stringify(user));
-            console.log(loginMes);
+            // console.log(loginMes);
+            let loginData = {
+                type: 'LoginMes',
+                data: '{"user":{"userId":100,"userPwd":"123456","userSex":"男","score":0}}',
+            };
             axios({
                 url: 'http://localhost:8090/login',
                 method: 'post',
                 data: {
-                    loginMes
+                    loginData
+
                 }
 
             }).then(result => {

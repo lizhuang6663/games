@@ -53,45 +53,44 @@
 
 .double-box {
     position: relative;
-    margin-top: 55px;
+    margin-top: 6vh;
 }
 
 .doll {
     position: absolute;
-    left: -27px;
+    left: -5vw;
     /* z-index: -1; */
 }
 
 .s-doll {
-    height: 88px;
+    height: 11vh;
 }
 
 .d-dolls {
-    height: 88px;
-    width: 65px;
+    height: 11vh;
+    width: 15vw;
 }
 
 .box {
     background-color: pink;
-    width: 275px;
+    width: 68vw;
 
 }
 
 .box p {
-    font-size: 55px;
-    line-height: 88px;
+    font-size: 13vw;
+    line-height: 11vh;
     text-align: center;
-    margin-left: 39px;
+    margin-left: 9vw;
 }
 
 .message-box {
-
-    width: 125px;
-    margin-top: 80px;
+    width: 30vw;
+    margin-top: 11vh;
 }
 
 .img {
-    width: 50px;
+    width: 12vw;
     margin-top: 20px;
     border-radius: 50%;
     margin-left: 30%;
