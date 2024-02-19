@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>登录</title>
     <script src="js/function.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="js/loginVer.js"></script>
     <style>
         * {
             margin: 0;
@@ -120,39 +122,14 @@
             <h1>账号登录</h1>
             <!-- 输入区 -->
             <div class="enter">
-                <input type="text" placeholder="请输入ID" class="input-box user-id">
-                <input type="password" placeholder="请输入密码" class="input-box psw">
-                <button onclick="loginTurnToPage()">登录</button>
+                <input type="text" placeholder="请输入ID" class="input-box" id="user-id">
+                <input type="password" placeholder="请输入密码" class="input-box " id="psw">
+                <button class="login-btn">登录</button>
                 <a href="register.html">立即注册</a>
             </div>
 
         </div>
     </div>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script>
-    // var userId = $('.user-id').value
-    // var password = $('.psw').value
-
-    function loginTurnToPage() {
-        axios({
-            url: 'http://localhost:8090/login',
-            method: 'post',
-            data: {
-                userId: '123',
-                password: '@111'
-            }
-
-        }).then(result => {
-            //获取成功
-            console.log(result)
-            window.location.href = "index.html";
-        }).catch(error => {
-            //失败
-            console.log(error)
-        })
-
-    }
-</script>
 
 </html>
