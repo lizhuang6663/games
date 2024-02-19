@@ -156,7 +156,8 @@
             var userId = $('#user-id').value
             var password = $('#psw').value
 
-            let user = new User(userId, password, 0, 0);
+            let user = new User(userId, password, "", 0);
+            console.log(user);
 
             // let loginMes = new Message("LoginMes", JSON.stringify(user));
             // // console.log(loginMes);
@@ -169,7 +170,7 @@
                 method: 'post',
                 data: {
                     type: 'LoginMes',
-                    data: `{"user":${user}}`
+                    data: `{"user":${JSON.stringify(user)}}`
                 }
 
             }).then(result => {
