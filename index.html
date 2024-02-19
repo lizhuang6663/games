@@ -155,9 +155,8 @@
         function loginTurnToPage() {
             var userId = $('#user-id').value
             var password = $('#psw').value
-            // console.log(userId);
-            // let user = new User(userId, password, 0, 0);
-            // // console.log(user);
+
+            let user = new User(userId, password, 0, 0);
 
             // let loginMes = new Message("LoginMes", JSON.stringify(user));
             // // console.log(loginMes);
@@ -170,7 +169,7 @@
                 method: 'post',
                 data: {
                     type: 'LoginMes',
-                    data: `{"user":{"userId":${userId},"userPwd":"${password}","userSex":"","score":0}}`
+                    data: `{"user":${user}}`
                 }
 
             }).then(result => {
