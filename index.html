@@ -156,21 +156,21 @@
             var userId = $('#user-id').value
             var password = $('#psw').value
             // console.log(userId);
-            let user = new User(userId, password, 0, 0);
-            // console.log(user);
+            // let user = new User(userId, password, 0, 0);
+            // // console.log(user);
 
-            let loginMes = new Message("LoginMes", JSON.stringify(user));
-            // console.log(loginMes);
-            let loginData = {
-                type: 'LoginMes',
-                data: '{"user":{"userId":100,"userPwd":"123456","userSex":"男","score":0}}',
-            };
+            // let loginMes = new Message("LoginMes", JSON.stringify(user));
+            // // console.log(loginMes);
+            // // let loginData = {
+            // //     type: 'LoginMes',
+            // //     data: '{"user":{"userId":100,"userPwd":"123456","userSex":"男","score":0}}',
+            // // };
             axios({
                 url: 'http://localhost:8090/login',
                 method: 'post',
                 data: {
-                    loginData
-
+                    type: 'LoginMes',
+                    data: `{"user":{"userId":${userId},"userPwd":${password},"userSex":"","score":0}}`
                 }
 
             }).then(result => {
