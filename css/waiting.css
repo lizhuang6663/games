@@ -1,0 +1,167 @@
+.whole-box {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    justify-content: center;
+    align-items: center;
+}
+
+h2 {
+    height: 15vh;
+    font-size: 12vw;
+    line-height: 15vh;
+
+}
+
+.rivals-box {
+    text-align: center;
+    /* line-height: 30vh; */
+    background-color: #894a4a;
+    width: 100vw;
+    height: 30vh;
+}
+
+.myBox,
+.rivalBox {
+    display: inline-block;
+    width: 30vw;
+    height: 20vh;
+    margin-top: 4vh;
+}
+
+.myImg,
+.rivalImg {
+    border-radius: 50%;
+    width: 30vw;
+    height: 15vh;
+    background-color: cadetblue;
+}
+
+.rivalImg {
+    font-size: 18vw;
+}
+
+.myId,
+.rivalId {
+    font-size: 5vw;
+}
+
+.vs {
+    font-size: 9vw;
+    transform: translateY(-9vh);
+    display: inline-block;
+    width: 13vw;
+    height: 7vh;
+    background-color: #fff;
+}
+
+.chat-box {
+    text-align: center;
+    background-color: #5d5bd9;
+    width: 100vw;
+    height: 40vh;
+}
+
+.chat-top {
+    height: 25vh;
+    width: 90vw;
+    background-color: #5bd148;
+    margin-left: 5vw;
+}
+
+.chat-bottom {
+    height: 6vh;
+    background-color: #a4d242;
+    margin-left: 5vw;
+    padding-top: 1vh;
+    width: 90vw;
+}
+
+.op-box {
+    background-color: #46ddd3;
+    width: 100vw;
+    height: 15vh;
+}
+
+.send-message {
+    display: block;
+    outline: none;
+    box-sizing: border-box;
+    border-radius: 3px;
+    color: #fff;
+    width: 60vw;
+    height: 4vh;
+    margin-left: 2vw;
+    float: left;
+}
+
+.send {
+    float: right;
+    border: 3px solid #894a4a;
+    width: 18vw;
+    height: 4vh;
+    margin-right: 2vw;
+    border-radius: 3px;
+    font-size: 4vw;
+}
+
+.back-box {
+    float: left;
+    width: 18vw;
+    height: 12vh;
+    margin-left: 4vw;
+}
+
+.game-run {
+    float: right;
+    border: 3px solid #894a4a;
+    width: 35vw;
+    height: 7vh;
+    margin-top: 1.5vh;
+    margin-right: 4vw;
+    border-radius: 15px;
+    font-size: 7vw;
+    text-align: center;
+    line-height: 6vh;
+}
+
+.coat-link {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+.link-box {
+
+    height: 18vh;
+    width: 100vw;
+    background-color: #dc8787;
+    margin: 41vh auto;
+}
+
+h3 {
+    font-size: 5vw;
+    text-align: center;
+    margin-top: 3vh;
+}
+
+.link {
+    margin: auto;
+    height: 8vh;
+    width: 95vw;
+    background-color: #49d2e7;
+}
+
+.invite-link {
+    font-size: 4vw;
+    width: 90vw;
+
+}
+
+.copy-icon {
+    float: right;
+}

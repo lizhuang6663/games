@@ -133,19 +133,20 @@
 <script>
     window.onload = () => {
 
-        class Message {
-            constructor(type, data) {
-                this.type = type;//字符串
-                this.data = data;//数据 字符串
-            }
-        }
-
-        class User {
+        class UserRegister {
             constructor(userId, userPwd, userSex, score) {
                 this.userId = userId;
                 this.userPwd = userPwd;
                 this.userSex = userSex;
                 this.score = score;
+
+            }
+        }
+
+        class UserLogin {
+            constructor(userId, userPwd) {
+                this.userId = userId;
+                this.userPwd = userPwd;
 
             }
         }
@@ -156,15 +157,9 @@
             var userId = $('#user-id').value
             var password = Number($('#psw').value)
 
-            let user = new User(userId, password, "", 0);
+            let userLogin = new UserLogin(userId, password);
             console.log(user);
 
-            // let loginMes = new Message("LoginMes", JSON.stringify(user));
-            // // console.log(loginMes);
-            // // let loginData = {
-            // //     type: 'LoginMes',
-            // //     data: '{"user":{"userId":100,"userPwd":"123456","userSex":"男","score":0}}',
-            // // };
             axios({
                 url: 'http://localhost:8090/login',
                 method: 'post',
@@ -172,7 +167,6 @@
                     type: 'LoginMes',
                     data: `{"user":${JSON.stringify(user)}}`
                 }
-
             }).then(result => {
                 //获取成功
                 console.log(result)

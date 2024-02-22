@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>失败界面</title>
+    <style>
+        .whole-box {
+            height: 100vh;
+            width: 100vw;
+            background-color: black;
+            overflow: auto;
+        }
+
+        .defeat {
+            margin: 17vh auto 0;
+            height: 33vh;
+            width: 100vw;
+        }
+
+        .defeat-tip,
+        .y-score,
+        .o-score {
+            margin-top: 2vh;
+            text-align: center;
+            font-size: 6vw;
+            color: rgb(173, 56, 27);
+        }
+
+        .sure {
+            border: 2px solid rgb(173, 56, 2);
+            border-radius: 7%;
+            width: 28vw;
+            height: 6vh;
+            margin: 3vh auto 0;
+            color: rgb(173, 56, 27);
+
+            line-height: 6vh;
+            text-align: center;
+            font-size: 6vw;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="whole-box">
+        <img src="images/defeat.jpg" alt="" class="defeat">
+        <div class="defeat-tip">很遗憾您在本次PK被击败</div>
+        <div class="o-score">rival score:50</div>
+        <div class="y-score">your score:23</div>
+        <div class="sure">确定</div>
+    </div>
+
+</body>
+
+</html>
