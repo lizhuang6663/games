@@ -133,40 +133,22 @@
 <script>
     window.onload = () => {
 
-        class UserRegister {
-            constructor(userId, userPwd, userSex, score) {
-                this.userId = userId;
-                this.userPwd = userPwd;
-                this.userSex = userSex;
-                this.score = score;
-
-            }
-        }
-
-        class UserLogin {
-            constructor(userId, userPwd) {
-                this.userId = userId;
-                this.userPwd = userPwd;
-
-            }
-        }
 
         var loginBtn = $(".login-btn")
 
         function loginTurnToPage() {
-            var userId = $('#user-id').value
-            var password = Number($('#psw').value)
+            var userId = Number($('#user-id').value)
+            var password = $('#psw').value
 
-            let userLogin = new UserLogin(userId, password);
-            console.log(user);
 
             axios({
                 url: 'http://localhost:8090/login',
                 method: 'post',
                 data: {
-                    type: 'LoginMes',
-                    data: `{"user":${JSON.stringify(user)}}`
+                    "UserId": userId,
+                    "UserPwd": `"${password}"`
                 }
+
             }).then(result => {
                 //获取成功
                 console.log(result)
@@ -181,7 +163,6 @@
         loginBtn.addEventListener('click', loginTurnToPage)
 
     }
-
 
 
 </script>
