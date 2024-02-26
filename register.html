@@ -5,6 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>注册</title>
+    <script src="js/function.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="js/all.js"></script>
+
     <style>
         * {
             margin: 0;
@@ -117,16 +121,17 @@
             <h1>账号注册</h1>
             <!-- 输入区 -->
             <div class="enter">
-                <input type="text" placeholder="请输入ID(不超过五位)" class="input-box">
-                <input type="password" placeholder="请输入密码(必须六位)" class="input-box">
+                <input type="text" placeholder="请输入ID(不超过六位)" class="input-box" id="user-id">
+                <input type="password" placeholder="请输入密码(不超过六位)" class="input-box" maxlength="6" id="psw">
+                <i class="tip-box"></i>
                 <div class="gender-box">
-                    <input type="radio" class="gender male" name="gender" value="male">
+                    <input type="radio" class="gender male" name="gender" value="男" checked>
                     <i class="male-text">男</i>
-                    <input type="radio" class="gender female" name="gender" value="female">
+                    <input type="radio" class="gender female" name="gender" value="女">
                     <i class="female-text">女</i>
 
                 </div>
-                <button onclick="redirectToPage()">注册</button>
+                <button class="regist-btn">注册</button>
             </div>
 
         </div>
@@ -136,10 +141,90 @@
 </html>
 
 <script>
+    window.onload = () => {
+        class User {
+            constructor(userId, userPwd, userSex, score) {
+                this.userId = userId;
+                this.userPwd = userPwd;
+                this.userSex = userSex;
+                this.score = score;
 
-    function redirectToPage() {
-        window.location.href = "index.html";
+            }
+
+        }
+        function idLimit(inputBox) {
+            const inputElement = inputBox;
+
+            inputElement.addEventListener('input', function (event) {
+                const inputValue = event.target.value;
+
+                // 使用正则表达式检查输入是否为6位数字
+                const isValidInput = /^\d{6}$/.test(inputValue);
+
+                // 如果输入不符合要求，则清除输入
+                if (!isValidInput) {
+                    event.target.value = inputValue.slice(0, 6).replace(/\D/g, '');
+                }
+            });
+            return false
+        }
+
+        var registBtn = $(".regist-btn")
+        var tipBox = $('.tip-box')
+
+        function loginTurnToPage() {
+            var userId = Number($('#user-id').value)
+            var user_id = $('#user-id')
+            var password = $('#psw').value
+            var male = $('.male').value
+            var female = $('.female').value
+            var gender = ''
+
+            if (male.checked) {
+                gender = male.value;
+            } else if (female.checked) {
+                gender = female.value;
+            }
+
+
+            if (idLimit(user_id)) {
+                axios({
+                    url: 'http://localhost:8090/register',
+                    method: 'post',
+                    data: {
+                        "UserId": userId,
+                        "UserPwd": password,
+                        "UserSex": gender
+                    }
+
+                }).then(result => {
+                    //获取成功
+                    console.log(result)
+                    if (result.data.code == 409) {
+                        console.log(result.data.error);
+                        tipBox.textContent = result.data.error
+
+                    }
+                    if (result.data.code == 200) {
+                        console.log("注册成功");
+
+                        window.location.href = "login.html";
+
+                    }
+
+                }).catch(error => {
+                    //失败
+                    console.log(error)
+                })
+            } else {
+                tipBox.textContent = 'id格式有误'
+            }
+
+        }
+
+        registBtn.addEventListener('click', loginTurnToPage)
+
+
     }
-
 
 </script>
