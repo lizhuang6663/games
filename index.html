@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>登录</title>
     <!-- 在 HTML 中使用模块 -->
-    <script type="module" src="js/all.js"></script>
+    <!-- <script type="module" src="js/all.js"></script> -->
     <script src="js/function.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
@@ -151,28 +151,28 @@
         }
         var user = new User()
 
-        function idLimit(inputBox) {
-            const inputElement = inputBox;
+        // function idLimit(inputBox) {
+        //     const inputElement = inputBox;
 
-            inputElement.addEventListener('input', function (event) {
-                const inputValue = event.target.value;
+        //     inputElement.addEventListener('input', function (event) {
+        //         const inputValue = event.target.value;
 
-                // 使用正则表达式检查输入是否为6位数字
-                const isValidInput = /^\d{6}$/.test(inputValue);
+        //         // 使用正则表达式检查输入是否为6位数字
+        //         const isValidInput = /^\d{6}$/.test(inputValue);
 
-                // 如果输入不符合要求，则清除输入
-                if (!isValidInput) {
-                    event.target.value = inputValue.slice(0, 6).replace(/\D/g, '');
-                }
-            });
-            return false
-        }
+        //         // 如果输入不符合要求，则清除输入
+        //         if (!isValidInput) {
+        //             event.target.value = inputValue.slice(0, 6).replace(/\D/g, '');
+        //         }
+        //     });
+        //     return false
+        // }
 
         var loginBtn = $(".login-btn")
         var tipBox = $('.tip-box')
         var user_id = $('#user-id')
         var user_psw = $('#psw')
-
+        console.log(23245342);
 
         function loginTurnToPage() {
             var userId = Number($('#user-id').value)
@@ -181,49 +181,49 @@
             // localStorage.setItem('user', JSON.stringify(user));
 
 
-            if (inputLimit(user_id)) {
+            // if (idLimit(user_id)) {
+            console.log(12);
 
+            axios({
+                url: 'http://localhost:8090/login',
+                method: 'post',
+                data: {
+                    "UserId": userId,
+                    "UserPwd": password
+                }
 
-                axios({
-                    url: 'http://localhost:8090/login',
-                    method: 'post',
-                    data: {
-                        "UserId": userId,
-                        "UserPwd": password
-                    }
+            }).then(result => {
+                //获取成功
+                console.log(result)
+                if (result.data.code == 404 || result.data.code == 401) {
+                    console.log(result.data.error);
+                    tipBox.textContent = result.data.error
 
-                }).then(result => {
-                    //获取成功
-                    console.log(result)
-                    if (result.data.code == 404 || result.data.code == 401) {
-                        console.log(result.data.error);
-                        tipBox.textContent = result.data.error
+                }
+                if (result.data.code == 200) {
+                    console.log("登录成功");
+                    var userId = result.data.user.userId
+                    var userPwd = result.data.user.userPwd
+                    var userSex = result.data.user.userSex
+                    var score = result.data.user.score
+                    user.userId = userId
+                    user.userPwd = userPwd
+                    user.userSex = userSex
+                    user.score = score
+                    // 存储到本地
+                    localStorage.setItem('user', JSON.stringify(user));
 
-                    }
-                    if (result.data.code == 200) {
-                        console.log("登录成功");
-                        var userId = result.data.user.userId
-                        var userPwd = result.data.user.userPwd
-                        var userSex = result.data.user.userSex
-                        var score = result.data.user.score
-                        user.userId = userId
-                        user.userPwd = userPwd
-                        user.userSex = userSex
-                        user.score = score
-                        // 存储到本地
-                        localStorage.setItem('user', JSON.stringify(user));
+                    window.location.href = "select.html";
 
-                        window.location.href = "select.html";
+                }
 
-                    }
-
-                }).catch(error => {
-                    //失败
-                    console.log(error)
-                })
-            } else {
-                tipBox.textContent = 'id格式有误'
-            }
+            }).catch(error => {
+                //失败
+                console.log(error)
+            })
+            // } else {
+            //     tipBox.textContent = 'id格式有误'
+            // }
 
         }
 
