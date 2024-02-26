@@ -181,49 +181,49 @@
             // localStorage.setItem('user', JSON.stringify(user));
 
 
-            if (idLimit(user_id)) {
-                console.log(12);
+            // if (idLimit(user_id)) {
+            console.log(12);
 
-                axios({
-                    url: 'http://localhost:8090/login',
-                    method: 'post',
-                    data: {
-                        "UserId": userId,
-                        "UserPwd": password
-                    }
+            axios({
+                url: 'http://localhost:8090/login',
+                method: 'post',
+                data: {
+                    "UserId": userId,
+                    "UserPwd": password
+                }
 
-                }).then(result => {
-                    //获取成功
-                    console.log(result)
-                    if (result.data.code == 404 || result.data.code == 401) {
-                        console.log(result.data.error);
-                        tipBox.textContent = result.data.error
+            }).then(result => {
+                //获取成功
+                console.log(result)
+                if (result.data.code == 404 || result.data.code == 401) {
+                    console.log(result.data.error);
+                    tipBox.textContent = result.data.error
 
-                    }
-                    if (result.data.code == 200) {
-                        console.log("登录成功");
-                        var userId = result.data.user.userId
-                        var userPwd = result.data.user.userPwd
-                        var userSex = result.data.user.userSex
-                        var score = result.data.user.score
-                        user.userId = userId
-                        user.userPwd = userPwd
-                        user.userSex = userSex
-                        user.score = score
-                        // 存储到本地
-                        localStorage.setItem('user', JSON.stringify(user));
+                }
+                if (result.data.code == 200) {
+                    console.log("登录成功");
+                    var userId = result.data.user.userId
+                    var userPwd = result.data.user.userPwd
+                    var userSex = result.data.user.userSex
+                    var score = result.data.user.score
+                    user.userId = userId
+                    user.userPwd = userPwd
+                    user.userSex = userSex
+                    user.score = score
+                    // 存储到本地
+                    localStorage.setItem('user', JSON.stringify(user));
 
-                        window.location.href = "select.html";
+                    window.location.href = "select.html";
 
-                    }
+                }
 
-                }).catch(error => {
-                    //失败
-                    console.log(error)
-                })
-            } else {
-                tipBox.textContent = 'id格式有误'
-            }
+            }).catch(error => {
+                //失败
+                console.log(error)
+            })
+            // } else {
+            //     tipBox.textContent = 'id格式有误'
+            // }
 
         }
 
