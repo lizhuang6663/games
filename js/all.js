@@ -1,4 +1,4 @@
-
+export { user, idLimit };
 window.onload = () => {
     class User {
         constructor(userId, userPwd, userSex, score) {

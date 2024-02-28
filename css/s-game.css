@@ -47,10 +47,10 @@
     height: 8vh;
 }
 
-.userid {
+.name {
     position: absolute;
     top: 8vh;
-    right: 2vw;
+    right: 4vw;
 }
 
 .plate-box {

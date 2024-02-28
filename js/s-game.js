@@ -6,6 +6,8 @@ window.onload = () => {
     var clear = $(".clear")
     var back = $(".delete")
     var scoreBox = $(".score")
+    var img = $('.img')
+    var name = $('.name')
 
 
 
@@ -29,6 +31,23 @@ window.onload = () => {
         }
 
     }
+
+    //个人信息的加载
+    var userMessageLoad = function () {
+        var userData = JSON.parse(localStorage.getItem('user'))
+        if (userData.userSex == '男') {
+            img.src = 'images/male.jpg'
+
+        } else {
+            img.src = 'images/female.jpg'
+
+        }
+        name.innerHTML = userData.userId
+    }
+
+
+    userMessageLoad()
+
 
     setTimeout(function () {
         startSign.style.display = "none"
@@ -60,7 +79,6 @@ window.onload = () => {
         console.log(pools2);
         //汉字池的内容
         dataLoad(pools1)
-
 
 
 
@@ -144,21 +162,6 @@ window.onload = () => {
 
 
     }, 1500)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
