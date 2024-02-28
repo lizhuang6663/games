@@ -45,22 +45,19 @@ window.onload = () => {
                 localStorage.setItem('rank', rankData)
                 rankData.forEach(element => {
                     var user = element
-                    rankId.forEach(element => {
-                        element.innerHTML = user.userId
-                    });
-                    rankImg.forEach(element => {
-                        if (user.userSex == '男') {
-                            element.src = 'images/male.jpg'
-                        } else {
-                            element.src = 'images/female.jpg'
+                    var index = 0
+                    rankId[index].innerHTML = user.userId
 
-                        }
-                    });
-                    scores.forEach(element => {
-                        element.innerHTML = user.score
-                    });
+                    if (user.userSex == '男') {
+                        rankImg[index].src = 'images/male.jpg'
+                    } else {
+                        rankImg[index].src = 'images/female.jpg'
 
+                    }
+                    scores[index].innerHTML = user.score
+                    index++
                 });
+
             }).catch(error => {
                 //失败
                 console.log(error)
