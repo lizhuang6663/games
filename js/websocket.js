@@ -1,13 +1,12 @@
 
-import { userData } from "./s-game.js";
+import { userData } from "./rank.js";
 console.log(userData.userId);
-
+var id = userData.userId
 
 if ('WebSocket' in window) {
     console.log("1111111111");
     const ws = new WebSocket('ws://127.0.0.1:8090/WSBegin')
     console.log("222222222222");
-    var id = userData
     var type2Data = {}
     var type3Data = {}
     var type4Data = {}

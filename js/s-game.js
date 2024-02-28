@@ -8,7 +8,7 @@ var back = $(".delete")
 var scoreBox = $(".score")
 var img = $('.img')
 var name = $('.name')
-export var userData = JSON.parse(localStorage.getItem('user'))
+var userData = JSON.parse(localStorage.getItem('user'))
 
 
 
