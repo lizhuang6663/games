@@ -155,6 +155,13 @@ function doubleWs_b(ws) {
             window.location.href = 'select.html'
         }
 
+        if (receivedType === 16) {
+            // 停止发送数据
+            shouldSendData5 = false;
+            console.log(receivedData);
+            // 存储到本地
+            localStorage.setItem('d-idiomData', JSON.stringify(receivedData));
+        }
 
 
     };

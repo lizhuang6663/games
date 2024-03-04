@@ -61,6 +61,8 @@ var shouldSendData1 = true;
 var shouldSendData2 = true;
 var shouldSendData3 = true;
 var shouldSendData4 = true;
+var shouldSendData5 = true;
+
 
 
 // //心跳包部分////////////////////////////////////////////
@@ -147,6 +149,16 @@ function doubleWs_a(ws) {
                 ws.send(`{"Type":11,"Data":"${userData.userId} ${link}"}`)
             }
         }, 1000); // 每秒发送一次数据
+
+        // 开始发送数据
+        setInterval(function () {
+            if (shouldSendData5) {
+                var link = window.location.href
+                // 发送数据
+                //玩家a创建房间
+                ws.send(`{"Type":16,"Data":"${link} 1 12"}`)
+            }
+        }, 1000); // 每秒发送一次数据
     });
 
     gameRun.addEventListener('click', () => {
@@ -202,19 +214,33 @@ function doubleWs_a(ws) {
 
             // 数组解构
             let [user1Id, user1Sex, user2Id, user2Sex] = parts;
-            //渲染玩家b的信息
-            var rivalId = $('.rivalId')
-            rivalId.innerHTML = user2Id
-            if (user2Sex == '男') {
-                rivalImg.src = 'images/male.jpg'
+            if (user2Id !== "0") {
+                var link = window.location.href
+                var room = { "roomId": link, "userbId": user1Id, "userbSex": user1Sex, "useraId": user2Id, "useraSex": user2Sex }
+                localStorage.setItem("room", JSON.stringify(room))
+                //渲染玩家b的信息
+                var rivalId = $('.rivalId')
+                rivalId.innerHTML = user2Id
+                if (user2Sex == '男') {
+                    rivalImg.src = 'images/male.jpg'
+                } else {
+                    rivalImg.src = 'images/female.jpg'
+                }
+                //开始游戏显现出来
+                var gameRun = $('.game-run')
+                gameRun.style.display = 'block'
+                // 存储到本地
+                // localStorage.setItem('idiomData', JSON.stringify(receivedData));
             } else {
-                rivalImg.src = 'images/female.jpg'
+                //消除玩家b的信息
+                var rivalId = $('.rivalId')
+                rivalId.innerHTML = '???'
+                rivalImg.innerHTML = '+'
+                //开始游戏取消显示
+                var gameRun = $('.game-run')
+                gameRun.style.display = 'none'
             }
-            //开始游戏显现出来
-            var gameRun = $('.game-run')
-            gameRun.style.display = 'block'
-            // 存储到本地
-            // localStorage.setItem('idiomData', JSON.stringify(receivedData));
+
         }
         if (receivedType === 14 && receivedData === '200') {
             shouldSendData2 = false;
@@ -227,6 +253,14 @@ function doubleWs_a(ws) {
 
             // 跳转到另一个页面
             window.location.href = 'select.html';
+        }
+
+        if (receivedType === 16) {
+            // 停止发送数据
+            shouldSendData5 = false;
+            console.log(receivedData);
+            // 存储到本地
+            localStorage.setItem('d-idiomData', JSON.stringify(receivedData));
         }
 
     };
