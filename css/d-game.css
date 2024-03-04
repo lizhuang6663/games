@@ -47,7 +47,7 @@
     height: 8vh;
 }
 
-.userid {
+.userBid {
     position: absolute;
     top: 8vh;
     right: 2vw;
@@ -124,7 +124,7 @@ footer {
     height: 19vh;
     background-color: #8ae28f;
     padding-top: 5vh;
-    padding-left: 12vw;
+    padding-left: 3vw;
 }
 
 .score-box {
@@ -135,7 +135,7 @@ footer {
     line-height: 5vh;
 }
 
-.level-box {
+.score-a {
     margin-top: 2vh;
     width: 15vw;
     height: 5vh;
@@ -149,7 +149,7 @@ footer {
     margin-top: 2vh;
 }
 
-.score {
+.score-b {
     margin-top: 2vh;
     width: 15vw;
     height: 5vh;

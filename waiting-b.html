@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<hea>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>玩家2等待房间</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/waiting-a.css">
+    <link rel="stylesheet" href="//at.alicdn.com/t/c/font_4427063_2niv31tpxzz.css">
+    <script src="js/function.js"></script>
+    <script src="js/rank.js"></script>
+
+</hea d>
+
+<body>
+    <div class="whole-box">
+        <h2>邀请房间</h2>
+        <div class="rivals-box">
+            <div class="myBox">
+                <img class="myImg"></img>
+                <div class="myId">???</div>
+            </div>
+            <span class="vs">vs</span>
+            <div class="rivalBox">
+                <img class="rivalImg"></img>
+                <div class="rivalId"></div>
+            </div>
+
+        </div>
+        <div class="chat-box">
+            <div class="chat-top">
+                <ul>
+                    <li>
+                        <div class="rival"></div>
+                        <div class="rival-message"></div>
+                    </li>
+                    <li>
+                        <div class="my-message"></div>
+                        <div class="my"></div>
+                    </li>
+                </ul>
+            </div>
+            <div class="chat-bottom">
+                <input type="text" placeholder="请输入内容" class="send-message">
+                <div class="send">发送</div>
+            </div>
+
+        </div>
+        <div class="op-box">
+            <div class="back-box"><i class="iconfont icon-shouye" style="font-size: 12vw;"></i></div>
+
+        </div>
+
+    </div>
+</body>
+
+</html>
+<script>
+
+    var rivalId = $('.rivalId')
+    var rivalImg = $('.rivalImg')
+    var backBox = $('.back-box')
+
+
+    var userData = JSON.parse(localStorage.getItem('user'))
+    rivalId.innerHTML = userData.userId
+    if (userData.userSex == '男') {
+        rivalImg.src = 'images/male.jpg'
+    } else {
+        rivalImg.src = 'images/female.jpg'
+    }
+
+
+    backBox.addEventListener('click', () => {
+        // 跳转到另一个页面
+        window.location.href = 'select.html';
+    });
+
+
+</script>

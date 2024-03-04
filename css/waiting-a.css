@@ -114,6 +114,7 @@ h2 {
 }
 
 .game-run {
+    display: none;
     float: right;
     border: 3px solid #894a4a;
     width: 35vw;

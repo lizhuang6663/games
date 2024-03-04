@@ -7,7 +7,6 @@
     <title>注册</title>
     <script src="js/function.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="js/all.js"></script>
 
     <style>
         * {
@@ -125,7 +124,7 @@
                 <input type="password" placeholder="请输入密码(不超过六位)" class="input-box" maxlength="6" id="psw">
                 <i class="tip-box"></i>
                 <div class="gender-box">
-                    <input type="radio" class="gender male" name="gender" value="男" checked>
+                    <input type="radio" class="gender male" name="gender" value="男" checked="checked">
                     <i class="male-text">男</i>
                     <input type="radio" class="gender female" name="gender" value="女">
                     <i class="female-text">女</i>
@@ -150,20 +149,20 @@
             var userId = Number($('#user-id').value)
             var user_id = $('#user-id')
             var password = $('#psw').value
-            var male = $('.male').value
-            var female = $('.female').value
-            var gender = ''
+            var male = $('.male')
+            var female = $('.female')
+
 
             if (male.checked) {
-                gender = male.value;
+                var gender = male.value
             } else if (female.checked) {
-                gender = female.value;
+                var gender = female.value
             }
 
 
-            if (!isNaN(userId)) {
+            if (!isNaN(userId) && userId !== 0 && password !== "") {
                 axios({
-                    url: 'http://localhost:8090/register',
+                    url: 'http://172.20.10.3:8090/register',
                     method: 'post',
                     data: {
                         "UserId": userId,
@@ -182,7 +181,7 @@
                     if (result.data.code == 200) {
                         console.log("注册成功");
 
-                        window.location.href = "login.html";
+                        window.location.href = "index.html";
 
                     }
 
@@ -191,7 +190,7 @@
                     console.log(error)
                 })
             } else {
-                tipBox.textContent = 'id格式有误'
+                tipBox.textContent = '数据格式有误'
             }
 
         }

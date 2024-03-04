@@ -49,7 +49,7 @@
 
 .single-box {
     position: relative;
-    margin-top: 18vh;
+    margin-top: 12vh;
 }
 
 .double-box {
@@ -86,9 +86,22 @@
     margin-left: 9vw;
 }
 
+.room-box {
+    margin-top: 2vh;
+    width: 68vw;
+    height: 6vh;
+    background-color: #ef8d8d;
+}
+
+.room-join {
+    background-color: #5aaec5;
+    float: right;
+}
+
 .message-box {
     width: 30vw;
     margin-top: 8vh;
+
 }
 
 .img {

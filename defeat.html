@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>失败界面</title>
+    <script src="js/function.js"></script>
+    <script src="js/end.js"></script>
     <style>
         .whole-box {
             height: 100vh;
@@ -47,11 +49,21 @@
     <div class="whole-box">
         <img src="images/defeat.jpg" alt="" class="defeat">
         <div class="defeat-tip">很遗憾您在本次PK被击败</div>
-        <div class="o-score">rival score:50</div>
-        <div class="y-score">your score:23</div>
+        <div class="o-score">rival score:</div>
+        <div class="y-score">your score:</div>
         <div class="sure">确定</div>
     </div>
 
 </body>
 
 </html>
+<script>
+    var yScore = $('.y-score')
+
+    var currentScore = JSON.parse(localStorage.getItem('currentScore'))
+    yScore.innerHTML = `your score:${currentScore}`
+    var sure = $('.sure')
+    sure.onclick = () => {
+        window.location.href = 'select.html'
+    }
+</script>

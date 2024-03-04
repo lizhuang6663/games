@@ -166,7 +166,7 @@
                 // console.log(12);
 
                 axios({
-                    url: 'http://localhost:8090/login',
+                    url: 'http://172.20.10.3:8090/login',
                     method: 'post',
                     data: {
                         "UserId": userId,
@@ -176,7 +176,7 @@
                 }).then(result => {
                     //获取成功
                     console.log(result)
-                    if (result.data.code == 404 || result.data.code == 401) {
+                    if (result.data.code == 404 || result.data.code == 401 || result.data.code == 409) {
                         console.log(result.data.error);
                         tipBox.textContent = result.data.error
 
@@ -197,6 +197,7 @@
                         window.location.href = "select.html";
 
                     }
+
 
                 }).catch(error => {
                     //失败

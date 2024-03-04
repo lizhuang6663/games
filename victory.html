@@ -5,6 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>胜利界面</title>
+    <script src="js/function.js"></script>
+    <script src="js/end.js"></script>
+
+
     <style>
         .whole-box {
             height: 100vh;
@@ -45,10 +49,19 @@
     <div class="whole-box">
         <img src="images/victory.jpg" alt="" class="victory">
         <div class="victory-tip">恭喜你取得了本次PK的胜利</div>
-        <div class="v-score">score:23</div>
+        <div class="v-score">score:</div>
         <div class="sure">确定</div>
     </div>
 
 </body>
 
 </html>
+<script>
+    var vScore = $('.v-score')
+    var currentScore = JSON.parse(localStorage.getItem('currentScore'))
+    vScore.innerHTML = `score:${currentScore}`
+    var sure = $('.sure')
+    sure.onclick = () => {
+        window.location.href = 'select.html'
+    }
+</script>
