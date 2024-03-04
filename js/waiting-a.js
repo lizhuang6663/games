@@ -150,15 +150,7 @@ function doubleWs_a(ws) {
             }
         }, 1000); // 每秒发送一次数据
 
-        // 开始发送数据
-        setInterval(function () {
-            if (shouldSendData5) {
-                var link = window.location.href
-                // 发送数据
-                //玩家a创建房间
-                ws.send(`{"Type":16,"Data":"${link} 1 12"}`)
-            }
-        }, 1000); // 每秒发送一次数据
+
     });
 
     gameRun.addEventListener('click', () => {
@@ -170,6 +162,16 @@ function doubleWs_a(ws) {
                 //玩家a点击开始游戏
                 // 发送数据
                 ws.send(`{"Type":14,"Data":"${userData.userId} ${link}"}`)
+            }
+        }, 1000); // 每秒发送一次数据
+
+        // 开始发送数据
+        setInterval(function () {
+            if (shouldSendData5) {
+                var link = window.location.href
+                // 发送数据
+                //玩家a创建房间
+                ws.send(`{"Type":16,"Data":"${link} 1 12"}`)
             }
         }, 1000); // 每秒发送一次数据
     });
