@@ -11,27 +11,9 @@ import (
 
 // 业务逻辑，具体的每个函数的执行逻辑
 
-// 更新websocket链接
-// func UpdateWS(mes *model.Message, newWS *utils.WSTransfer) (str string, err error) {
-// 	userId, err := strconv.Atoi(mes.Data)
-// 	if err != nil {
-// 		fmt.Println("UpdateWS() strconv.Atoi() err = ", err)
-// 		return
-// 	}
-//
-// 	conn, ok := onlineMap.Get(userId)
-// 	if !ok {
-// 		fmt.Println("UpdateWS() onlineMap.Get() 不能存在这个链接")
-// 		return
-// 	}
-//
-// 	// 更新
-// 	if conn != nil {
-// 		onlineMap.Set(userId, newWS.Conn)
-// 	}
-//
-// 	return "200", nil
-// }
+// 下面的函数可能出现空指针错误的原因：
+// 1.前端发送的消息错误，导致 sli[index] 不存在。
+// 2.前端运行的顺序逻辑出现问题，导致后端房间中的 UserB == nil （后端代码已经加过了判断，确保不会出现 UserB == nil 的时候，调用 UserB.UserId）
 
 // 挑选成语
 func SelectWords(mes *model.Message) (str string, err error) {
@@ -75,7 +57,7 @@ func ChangeScore(mes *model.Message) (str string, err error) {
 
 	err = dao.DbManager.ChangeScoreById(userId, score)
 	if err != nil {
-		fmt.Println("ChangeScore() dbManager.ChangeScoreById() err = ", err)
+		fmt.Println("ChangeScore() dao.DbManager.ChangeScoreById() err = ", err)
 		return
 	}
 
@@ -103,10 +85,9 @@ func CreateRoom(mes *model.Message) (err error) {
 	}
 
 	room := &Room{
-		UserA:     userA,
-		RoomId:    roomId,
-		UserB:     nil,
-		BeginGame: false,
+		UserA:  userA,
+		RoomId: roomId,
+		UserB:  nil,
 	}
 	// 创建房间
 	roomMap.Set(roomId, room)
@@ -122,11 +103,7 @@ func CreateRoom(mes *model.Message) (err error) {
 
 	fmt.Printf("玩家A %v 创建了房间 %v\n", userA, roomId)
 
-	fmt.Println("\n-------------------------------------")
-	for _, v := range roomMap.room {
-		fmt.Println("当前存在的房间为：", v.UserA, v.RoomId, v.UserB, v.BeginGame)
-	}
-	fmt.Println("-------------------------------------\n\n")
+	PrintAllRoom()
 
 	return err
 }
@@ -164,72 +141,61 @@ func GoRoom(mes *model.Message) (err error) {
 		}
 		return
 
-	} else { // 存在该房间
+	}
 
-		if room.UserB == nil {
-			room.UserB = userB
-			fmt.Printf("玩家B %v 进入了房间 %v\n", userB, roomId)
+	// 存在该房间
+	if room.UserB == nil { // 如果该房间中UserB的位置是空的，B可以加入房间
+		room.UserB = userB
+		fmt.Printf("玩家B %v 进入了房间 %v\n", userB, roomId)
 
-			// 给玩家B发信息
-			mes.Type = 12
-			if mes.Data != "200" {
-				mes.Data = "200"
-			}
-			// 给B发送：确定收到
-			err = SedingMes(userBId, mes)
-			if err != nil {
-				fmt.Println("GoRoom() SedingMes() err = ", err)
-				return
-			}
-
-			// 玩家B进入房间后，给玩家A发送一个包(包含玩家B的信息)，给玩家B发送一个包（包含玩家A的信息）
-			mes2 := &model.Message{
-				Type: 13,
-			}
-
-			userA := room.UserA
-			idA := strconv.Itoa(userA.UserId)
-			idB := strconv.Itoa(userB.UserId)
-
-			// 给A发
-			// mes2.Data = idA + " " + userA.UserSex + " " + idB + " " + userB.UserSex
-			mes2.Data = idB + " " + userB.UserSex
-			err = SedingMes(userA.UserId, mes2)
-			if err != nil {
-				fmt.Println("GoRoom() SedingMes() err = ", err)
-				return
-			}
-
-			// 给B发
-			// mes2.Data = idB + " " + userB.UserSex + " " + idA + " " + userA.UserSex
-			mes2.Data = idA + " " + userA.UserSex
-			err = SedingMes(userB.UserId, mes2)
-			if err != nil {
-				fmt.Println("GoRoom() SedingMes() err = ", err)
-				return
-			}
-
-		} else {
-			fmt.Printf("玩家B %v 无法进入房间 %v，该房间已满\n", userB, roomId)
-			// 房间已经满了
-			mes.Type = 12
-			mes.Data = utils.ERROR_ROOM_FULL.Error()
-
-			// 给B发送：房间已满
-			err = SedingMes(userBId, mes)
-			if err != nil {
-				fmt.Println("GoRoom() SedingMes() err = ", err)
-				return
-			}
+		// 给B发送：确定收到
+		mes.Data = "200"
+		err = SedingMes(userBId, mes)
+		if err != nil {
+			fmt.Println("GoRoom() SedingMes() err = ", err)
+			return
 		}
 
+		// 玩家B进入房间后，给玩家A发送一个包(包含玩家B的信息)，给玩家B发送一个包（包含玩家A的信息）
+		resMes := &model.Message{
+			Type: 13,
+		}
+
+		userA := room.UserA
+		idA := strconv.Itoa(userA.UserId)
+		idB := strconv.Itoa(userB.UserId)
+
+		// 给A发玩家B的信息
+		resMes.Data = idB + " " + userB.UserSex
+		err = SedingMes(userA.UserId, resMes)
+		if err != nil {
+			fmt.Println("GoRoom() SedingMes() err = ", err)
+			return
+		}
+
+		// 给B发玩家A的信息
+		resMes.Data = idA + " " + userA.UserSex
+		err = SedingMes(userB.UserId, resMes)
+		if err != nil {
+			fmt.Println("GoRoom() SedingMes() err = ", err)
+			return
+		}
+
+	} else { // 如果该房间中UserB的位置不是空的，B不可以加入房间
+		fmt.Printf("玩家B %v 无法进入房间 %v，该房间已满\n", userB, roomId)
+		// 房间已经满了
+		mes.Type = 12
+		mes.Data = utils.ERROR_ROOM_FULL.Error()
+
+		// 给B发送：房间已满
+		err = SedingMes(userBId, mes)
+		if err != nil {
+			fmt.Println("GoRoom() SedingMes() err = ", err)
+			return
+		}
 	}
 
-	fmt.Println("\n-------------------------------------")
-	for _, v := range roomMap.room {
-		fmt.Println("当前存在的房间为：", v.UserA, v.RoomId, v.UserB, v.BeginGame)
-	}
-	fmt.Println("-------------------------------------\n\n")
+	PrintAllRoom()
 
 	return err
 }
@@ -255,8 +221,6 @@ func BeginGame(mes *model.Message) (err error) {
 
 	// 给两个玩家发送 200
 	if room.UserA != nil && room.UserA.UserId == userAId && room.UserB != nil && room.RoomId == roomId {
-		room.BeginGame = true
-
 		mes := &model.Message{
 			Type: 14,
 			Data: "200",
@@ -275,23 +239,22 @@ func BeginGame(mes *model.Message) (err error) {
 		}
 	} else if room.UserB == nil {
 		// 房间人员没有到齐...
-		mes := &model.Message{
+		resMes := &model.Message{
 			Type: 14,
 			Data: "房间人员还没有到齐，请等待...",
 		}
 
-		err = SedingMes(userAId, mes)
+		err = SedingMes(userAId, resMes)
 		if err != nil {
 			fmt.Println("BeginGame() SedingMes() err = ", err)
 			return
 		}
+	} else {
+		// 前端发送的userAId、roomId可能有问题...
+		// 暂时不用补充代码...
 	}
 
-	fmt.Println("\n-------------------------------------")
-	for _, v := range roomMap.room {
-		fmt.Println("当前存在的房间为：", v.UserA, v.RoomId, v.UserB, v.BeginGame)
-	}
-	fmt.Println("-------------------------------------\n\n")
+	PrintAllRoom()
 
 	return
 }
@@ -317,7 +280,7 @@ func ExitRoom(mes *model.Message) (err error) {
 	mes.Data = "200"
 
 	// 1.房主退出房间。将房间销毁、给A，B发消息
-	if room.UserA.UserId == userId {
+	if room.UserA != nil && room.UserA.UserId == userId {
 		fmt.Printf("房主 %v 退出了房间，将房间 %v 销毁...\n", room.UserA, room.RoomId)
 
 		// 销毁房间
@@ -366,6 +329,8 @@ func ExitRoom(mes *model.Message) (err error) {
 		err = fmt.Errorf("无法识别的 id ：%v", userId)
 	}
 
+	PrintAllRoom()
+
 	return
 }
 
@@ -405,8 +370,8 @@ func DoubleSelectWords(mes *model.Message) (err error) {
 		Data: data,
 	}
 
-	// 有对手，可以正常游戏
-	if room.UserB != nil {
+	// 房间人齐了，可以正常游戏
+	if room.UserA != nil && room.UserB != nil {
 		err = SedingMes(room.UserA.UserId, resMes)
 		if err != nil {
 			fmt.Println("DoubleSelectWords() SedingMes() err = ", err)
@@ -419,13 +384,29 @@ func DoubleSelectWords(mes *model.Message) (err error) {
 			return
 		}
 
+	} else if room.UserA != nil && room.UserB == nil {
+		resMes.Data = utils.ERROR_ROOM_NOTFULL.Error() // 房间人未齐
+		err = SedingMes(room.UserA.UserId, resMes)
+		if err != nil {
+			fmt.Println("DoubleSelectWords() SedingMes() err = ", err)
+			return
+		}
+	} else if room.UserB != nil && room.UserA == nil {
+		resMes.Data = utils.ERROR_ROOM_NOTFULL.Error()
+		err = SedingMes(room.UserB.UserId, resMes)
+		if err != nil {
+			fmt.Println("DoubleSelectWords() SedingMes() err = ", err)
+			return
+		}
 	}
+
+	PrintAllRoom()
 
 	return
 }
 
-// 实时共享分数
-func ShareScore(mes *model.Message) (err error) {
+// 共享双人分数、双人聊天
+func ShareScoreAndChat(mes *model.Message) (err error) {
 	// 分割 mes.Data
 	sli := strings.Split(mes.Data, " ")
 
@@ -436,7 +417,6 @@ func ShareScore(mes *model.Message) (err error) {
 	}
 
 	roomId := sli[2]
-	// score := sli[2]
 
 	room, ok := roomMap.Get(roomId)
 	if !ok {
@@ -451,7 +431,7 @@ func ShareScore(mes *model.Message) (err error) {
 	}
 
 	// 给玩家A发送确定，给玩家B发送消息
-	if userId == room.UserA.UserId {
+	if room.UserA != nil && userId == room.UserA.UserId {
 		// 给A发确定
 		err = SedingMes(room.UserA.UserId, resMes)
 		if err != nil {
@@ -461,8 +441,7 @@ func ShareScore(mes *model.Message) (err error) {
 
 		// 如果B不是nil，就给B发消息
 		if room.UserB != nil {
-			// 给B发消息
-			// mes.Data = score
+			// 前端传过来什么数据，就把什么数据发给B
 			err = SedingMes(room.UserB.UserId, mes)
 			if err != nil {
 				fmt.Println("ShareScoreAndChat() SedingMes() err = ", err)
@@ -470,7 +449,17 @@ func ShareScore(mes *model.Message) (err error) {
 			}
 		}
 
-	} else if userId == room.UserB.UserId { //  给玩家B发送确定，给玩家A发送消息
+		// 如果发送的内容是分数，更改 roomMap中的分数
+		if mes.Type == 17 {
+			score, err := strconv.Atoi(sli[3])
+			if err != nil {
+				fmt.Println("ShareScoreAndChat() strconv.Atoi() err = ", err)
+				return
+			}
+			room.UserA.Score = score
+		}
+
+	} else if room.UserB != nil && userId == room.UserB.UserId { //  给玩家B发送确定，给玩家A发送消息
 		// 给B发确定
 		err = SedingMes(room.UserB.UserId, resMes)
 		if err != nil {
@@ -478,10 +467,9 @@ func ShareScore(mes *model.Message) (err error) {
 			return
 		}
 
-		// 如果B不是nil，就给B发消息
+		// 如果A不是nil，就给A发消息
 		if room.UserA != nil {
-			// 给A发消息
-			// mes.Data = score
+			// 前端传过来什么数据，就把什么数据发给A
 			err = SedingMes(room.UserA.UserId, mes)
 			if err != nil {
 				fmt.Println("ShareScoreAndChat() SedingMes() err = ", err)
@@ -489,83 +477,73 @@ func ShareScore(mes *model.Message) (err error) {
 			}
 		}
 
+		// 如果发送的内容是分数，更改 roomMap中的分数
+		if mes.Type == 17 {
+			score, err := strconv.Atoi(sli[3])
+			if err != nil {
+				fmt.Println("ShareScoreAndChat() strconv.Atoi() err = ", err)
+				return
+			}
+			room.UserB.Score = score
+		}
+
 	}
 
 	return
 }
 
-// 聊天
-func DoubleChat(mes *model.Message) (err error) {
+// 游戏结束后，A或者B点击确认，给A或者B发确定，给玩家A发送一个包(包含玩家B的信息)，给玩家B发送一个包（包含玩家A的信息），A，B再次进入房间
+func GameOverEnterRoom(mes *model.Message) (err error) {
 	// 分割 mes.Data
 	sli := strings.Split(mes.Data, " ")
 
 	userId, err := strconv.Atoi(sli[0])
 	if err != nil {
-		fmt.Println("ShareScoreAndChat() strconv.Atoi() err = ", err)
+		fmt.Println("GameOverEnterRoom() strconv.Atoi() err = ", err)
 		return
 	}
 
-	// sex := sli[1]
-	roomId := sli[2]
-	// fmt.Println(roomId)
-	// data := sli[3] // 分数、聊天的消息
-
+	roomId := sli[1]
 	room, ok := roomMap.Get(roomId)
 	if !ok {
-		fmt.Println("RealTimeShareScore() roomMap.Get() 不存在这个房间")
+		fmt.Println("GameOverEnterRoom() roomMap.Get() 不存在这个房间")
 		return
 	}
 
-	// 确定消息
-	resMes := &model.Message{
-		Type: 19,
-		Data: "200",
+	// 给A或者B发确定
+	mes.Data = "200"
+	err = SedingMes(userId, mes)
+	if err != nil {
+		fmt.Println("GameOverEnterRoom() SedingMes() err = ", err)
+		return
 	}
 
-	// 给玩家A发送确定，给玩家B发送消息
-	if userId == room.UserA.UserId {
-		// 给A发确定
-		err = SedingMes(room.UserA.UserId, resMes)
-		if err != nil {
-			fmt.Println("ShareScoreAndChat() SedingMes() err = ", err)
-			return
-		}
+	// 玩家B进入房间后，给玩家A发送一个包(包含玩家B的信息)，给玩家B发送一个包（包含玩家A的信息）
 
-		// 如果B不是nil，就给B发消息
-		if room.UserB != nil {
-			// 把mes.Data 全部发送给B
-			// mes.Data = data
-			err = SedingMes(room.UserB.UserId, mes)
-			if err != nil {
-				fmt.Println("ShareScoreAndChat() SedingMes() err = ", err)
-				return
-			}
-		}
+	resMes := &model.Message{
+		Type: 13,
+	}
 
-	} else if userId == room.UserB.UserId { //  给玩家B发送确定，给玩家A发送消息
-		// 给B发确定
-		err = SedingMes(room.UserB.UserId, resMes)
-		if err != nil {
-			fmt.Println("ShareScoreAndChat() SedingMes() err = ", err)
-			return
-		}
+	// 给A发玩家B的信息
+	resMes.Data = strconv.Itoa(room.UserB.UserId) + " " + room.UserB.UserSex
+	err = SedingMes(room.UserA.UserId, resMes)
+	if err != nil {
+		fmt.Println("GameOverEnterRoom() SedingMes() err = ", err)
+		return
+	}
 
-		// 如果B不是nil，就给B发消息
-		if room.UserA != nil {
-			// 给A发消息
-			// mes.Data = data
-			err = SedingMes(room.UserA.UserId, mes)
-			if err != nil {
-				fmt.Println("ShareScoreAndChat() SedingMes() err = ", err)
-				return
-			}
-		}
-
+	// 给B发玩家A的信息
+	resMes.Data = strconv.Itoa(room.UserA.UserId) + " " + room.UserA.UserSex
+	err = SedingMes(room.UserB.UserId, resMes)
+	if err != nil {
+		fmt.Println("GameOverEnterRoom() SedingMes() err = ", err)
+		return
 	}
 
 	return
 }
 
+// 给某个id发送消息
 func SedingMes(id int, mes *model.Message) (err error) {
 	// 获取websocket链接
 	conn, ok := onlineMap.Get(id)
@@ -587,4 +565,15 @@ func SedingMes(id int, mes *model.Message) (err error) {
 	}
 
 	return err
+}
+
+// 打印当前所有房间的信息
+func PrintAllRoom() {
+	fmt.Println("\n-------------------------------------")
+
+	for _, v := range roomMap.room {
+		fmt.Printf("当前存在的 roomId = %v，UserA = %v，UserB = %v", v.RoomId, v.UserA, v.UserB)
+	}
+
+	fmt.Println("-------------------------------------\n")
 }

@@ -142,22 +142,6 @@ func process(conn *websocket.Conn) {
 		if ok { // 如果可以将接口 m 转换为 model.Message 类型
 			switch mes.Type {
 
-			// 似乎不需要这段代码：
-			// case 0: // 用户页面跳转，需要重新更新websocket链接
-			// 	str, err := UpdateWS(&mes, wsTransfer)
-			// 	mes.Type = 0
-			// 	mes.Data = str
-			//
-			// 	fmt.Println("wsTransfer 已经改变了....")
-			// 	fmt.Println(wsTransfer.Conn)
-			//
-			// 	// 给前端传递数据
-			// 	err = wsTransfer.WritePkg(mes)
-			// 	if err != nil {
-			// 		fmt.Println("wsBegin() wsTransfer.WritePkg() err = ", err)
-			// 		return
-			// 	}
-
 			case 3: // 前端需要成语，后端给前端发送成语
 				str, _ := SelectWords(&mes)
 				mes.Type = 3
@@ -218,16 +202,25 @@ func process(conn *websocket.Conn) {
 				}
 
 			case 17: // 实时发送分数
-				err = ShareScore(&mes)
+				// err = ShareScore(&mes)
+				err = ShareScoreAndChat(&mes)
 				if err != nil {
 					fmt.Println("wsBegin() ShareScoreAndChat() err = ", err)
 					return
 				}
 
 			case 18: // 双人聊天
-				err = DoubleChat(&mes)
+				// err = DoubleChat(&mes)
+				err = ShareScoreAndChat(&mes)
 				if err != nil {
 					fmt.Println("wsBegin() ShareScoreAndChat() err = ", err)
+					return
+				}
+
+			case 20: // 双人对战结束后，再次进入房间
+				err = GameOverEnterRoom(&mes)
+				if err != nil {
+					fmt.Println("wsBegin() GameOverEnterRoom() err = ", err)
 					return
 				}
 

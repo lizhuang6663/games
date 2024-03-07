@@ -11,12 +11,11 @@ type RoomMap struct {
 	room map[string]*Room
 }
 
-// 房间结构体
+// 房间结构体(如果后期开发需要多人聊天，多人比赛，需要将UserA，UserB改为一个map，存放房间内的用户)
 type Room struct {
-	UserA     *model.User // 玩家A是房主
-	RoomId    string
-	UserB     *model.User
-	BeginGame bool
+	UserA  *model.User // 玩家A是房主
+	RoomId string
+	UserB  *model.User
 }
 
 // 创建一个新的 RoomMap 实例

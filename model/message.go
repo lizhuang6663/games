@@ -55,15 +55,22 @@ package model
 6.开始游戏后，发送词语
 前端发送（房主给后端发消息）：{"type" : 16, "data" : "roomId Difficulty NumOfWords"}
 玩家A和玩家B收到的成语一样：后端给玩家A发送：{"type" : 16, "data" : "..."} 后端给玩家B发送：{"type" : 16, "data" : "..."}
+房间人没有齐后端给A或者B发送：{"type" : 16, "data" : "房间人未齐"}
 
+(7和8的代码相同)
 7.实时共享分数
-房间中任意一个人分数发生变化，前端就发送{"type" : 17, "data" : "userId roomId score"}
-后端给这个人发送{"type" : 19, "data" : "200"}，后端给对手发送{"type" : 17, "data" : "score"}
+房间中任意一个人分数发生变化，前端就发送{"type" : 17, "data" : "userId userSex roomId score"}
+后端给这个人发送{"type" : 19, "data" : "200"}，后端给对手发送{"type" : 17, "data" : "userId userSex roomId score"}
 
 8.双人聊天
 前端发送：{"type" : 18, "data" : "userId userSex roomId chatMes"}
-后端给发消息的主人发送{"type" : 19, "data" : "200"}，后端给另一个人发送 {"type" : 18, "data" : "chatMes"} （如果房间中不存在另一个用户，就不发送）
+后端给发消息的主人发送{"type" : 19, "data" : "200"}，后端给另一个人发送 {"type" : 18, "data" : "userId userSex roomId chatMes"} （如果房间中不存在另一个用户，就不发送）
 
+9.游戏结束后，A或者B点击确认，给A或者B发确定，给玩家A发送一个包(包含玩家B的信息)，给玩家B发送一个包（包含玩家A的信息），A，B再次进入房间
+前端的玩家A或者玩家B发送：{"type" : 20, "data" : "userId roomId"}（玩家A和玩家B返回房间页面）
+后端给前端的发送者发送确认{"type" : 20, "data" : "200"}
+后端给A发送：{"type" : 13, "data" : "UserIdB B的性别"}
+后端给B发送：{"type" : 13, "data" : "UserIdA A的性别"}
 
 */
 
