@@ -5,12 +5,13 @@ import (
 	"IdiomGames/model"
 	"IdiomGames/utils"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
 )
 
-// 注册
+// Register 注册
 func Register(w http.ResponseWriter, r *http.Request) {
 	httpTransfer := &utils.HttpTransfer{
 		W: w,
@@ -30,7 +31,10 @@ func Register(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		// 判断错误的具体内容
-		if err == utils.ERROR_USER_EXISTS { // 用户已存在
+		// err == utils.ERROR_USER_NOTEXISTS 是直接比较错误值是否相等。
+		// errors.Is(err, utils.ERROR_USER_NOTEXISTS) 是使用 errors.Is 函数来检查错误链中是否包含某个特定的错误。
+		// 通常来说，推荐使用 errors.Is 函数来检查错误，因为它能够正确处理错误链。如果错误是嵌套在其他错误中的，使用 errors.Is 可以正确地检查到。 而直接比较错误值则不具备这种能力。
+		if errors.Is(err, utils.ERROR_USER_EXISTS) { // 用户已存在
 			registerResMes.Code = 409
 			registerResMes.Error = err.Error()
 		} else { // 未知错误
@@ -42,10 +46,14 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("注册成功")
 	}
 
-	httpTransfer.WritePkg(registerResMes)
+	err = httpTransfer.WritePkg(registerResMes)
+	if err != nil {
+		fmt.Println("Register() httpTransfer.WritePkg() err = ", err)
+		return
+	}
 }
 
-// 登录
+// Login 登录
 func Login(w http.ResponseWriter, r *http.Request) {
 	httpTransfer := &utils.HttpTransfer{
 		W: w,
@@ -70,13 +78,13 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		// 判断错误的具体内容
-		if err == utils.ERROR_USER_NOTEXISTS { // 用户不存在
+		if errors.Is(err, utils.ERROR_USER_NOTEXISTS) { // 用户不存在
 			loginResMes.Code = 404
 			loginResMes.Error = err.Error()
-		} else if err == utils.ERROR_USER_PWD { // 密码错误
+		} else if errors.Is(err, utils.ERROR_USER_PWD) { // 密码错误
 			loginResMes.Code = 401
 			loginResMes.Error = err.Error()
-		} else if err == utils.ERROR_USER_ONLINE { // 用户已经在线了
+		} else if errors.Is(err, utils.ERROR_USER_ONLINE) { // 用户已经在线了
 			loginResMes.Code = 409
 			loginResMes.Error = err.Error()
 		} else { // 未知错误
@@ -88,10 +96,14 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("登录成功")
 	}
 
-	httpTransfer.WritePkg(loginResMes)
+	err = httpTransfer.WritePkg(loginResMes)
+	if err != nil {
+		fmt.Println("Register() httpTransfer.WritePkg() err = ", err)
+		return
+	}
 }
 
-// 返回前十排名
+// Ranking 返回前十排名
 func Ranking(w http.ResponseWriter, r *http.Request) {
 	httpTransfer := &utils.HttpTransfer{
 		W: w,
@@ -123,5 +135,9 @@ func Ranking(w http.ResponseWriter, r *http.Request) {
 	mes.Type = 1
 	mes.Data = string(data)
 
-	httpTransfer.WritePkg(mes)
+	err = httpTransfer.WritePkg(mes)
+	if err != nil {
+		fmt.Println("Register() httpTransfer.WritePkg() err = ", err)
+		return
+	}
 }

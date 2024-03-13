@@ -12,7 +12,7 @@ type HttpTransfer struct {
 	R *http.Request
 }
 
-// 读取
+// ReadPkg 读取
 func (this *HttpTransfer) ReadPkg(request interface{}) ([]byte, error) {
 	data, err := io.ReadAll(this.R.Body)
 	if err != nil {
@@ -31,7 +31,7 @@ func (this *HttpTransfer) ReadPkg(request interface{}) ([]byte, error) {
 	return data, nil
 }
 
-// 写给前端
+// WritePkg 写给前端
 func (this *HttpTransfer) WritePkg(v interface{}) error {
 	// 序列化
 	data, err := json.Marshal(v)

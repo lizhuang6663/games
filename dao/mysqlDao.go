@@ -26,10 +26,10 @@ type DatabaseManager struct {
 	db *sql.DB
 }
 
-// 全局变量 DbManager，用来操作数据库
+// DbManager 全局变量，用来操作数据库
 var DbManager *DatabaseManager
 
-// 初始化 全局变量 DbManager
+// InitDatabaseManager 初始化全局变量 DbManager
 func InitDatabaseManager() {
 	DbManager, _ = NewDatabaseManager()
 }
@@ -71,7 +71,7 @@ func (dm *DatabaseManager) Close() {
     |用户管理																		 	 |
 	--------------------------------------------------------------------------------------
 */
-// 通过 UserId 从 mysql 数据库中获取到对应的 User 对象
+// GetUserById 通过 UserId 从 mysql 数据库中获取到对应的 User 对象
 func (this *DatabaseManager) GetUserById(userId int) (user *model.User, err error) {
 	sqlStatement := "SELECT UserPwd, UserSex, Score FROM t_users where UserId = ?"
 
@@ -103,8 +103,7 @@ func (this *DatabaseManager) GetUserById(userId int) (user *model.User, err erro
 	return user, err
 }
 
-// 用户注册
-// 通过 GetUserById 函数返回的user对象，来判断数据库中是否存在该id，从而进行注册逻辑
+// Register 用户注册 （通过 GetUserById 函数返回的user对象，来判断数据库中是否存在该id，从而进行注册逻辑）
 func (this *DatabaseManager) Register(userId int, userPwd string, userSex string) (err error) {
 	_, err = this.GetUserById(userId)
 	// 如果 err != nil，说明找不到该id的用户，可以注册；如果 err == nil，说明存在该id的用户了，不能注册
@@ -127,7 +126,7 @@ func (this *DatabaseManager) Register(userId int, userPwd string, userSex string
 	return err
 }
 
-// 用户登录（根据传入的userId，查找到mysql中完整的user，并返回，无论是否能成功登录，返回的都是mysql中完整的user）
+// Login 用户登录（根据传入的userId，查找到mysql中完整的user，并返回，无论是否能成功登录，返回的都是mysql中完整的user）
 func (this *DatabaseManager) Login(userId int, userPwd string) (user *model.User, err error) {
 	user, err = this.GetUserById(userId)
 	// err != nil，说明数据库中没有该用户
@@ -144,7 +143,7 @@ func (this *DatabaseManager) Login(userId int, userPwd string) (user *model.User
 	return
 }
 
-// 查询前n个分数最高的人，降序排列
+// QueryRankingByScore 查询前n个分数最高的人，降序排列
 func (this *DatabaseManager) QueryRankingByScore(n int) (ranking []*model.User, err error) {
 	sqlStatement := "SELECT * FROM t_users ORDER BY score DESC LIMIT ?;"
 	rows, err := this.db.Query(sqlStatement, n)
@@ -172,7 +171,7 @@ func (this *DatabaseManager) QueryRankingByScore(n int) (ranking []*model.User, 
 	return
 }
 
-// 更改用户的分数（根据传入的userId，查询到该用户的分数，并和传入的 score 比较，选择两者间最大的分数作为mysql中的分数，并将mysql中的分数改为socre）
+// ChangeScoreById 更改用户的分数（根据传入的userId，查询到该用户的分数，并和传入的 score 比较，选择两者间最大的分数作为mysql中的分数，并将mysql中的分数改为socre）
 func (this *DatabaseManager) ChangeScoreById(userId int, score int) (err error) {
 	user, err := this.GetUserById(userId)
 	if err != nil {
@@ -200,7 +199,7 @@ func (this *DatabaseManager) ChangeScoreById(userId int, score int) (err error) 
     |成语管理																			 |
 	--------------------------------------------------------------------------------------
 */
-// 根据当前关卡，从 mysql 中随机抽取 n 个成语，并返回
+// RandomWords 根据当前关卡，从 mysql 中随机抽取 n 个成语，并返回
 func (this *DatabaseManager) RandomWords(difficulty int, numOfWords int) (resultString string, err error) {
 	if numOfWords <= 0 {
 		err = utils.ERROR_LEVEL_WORDSNUM
@@ -264,7 +263,7 @@ func (this *DatabaseManager) RandomWords(difficulty int, numOfWords int) (result
 	return resultString, nil
 }
 
-// 判断切片中是否包含某个数
+// judgeSliExistsNum 判断切片中是否包含某个数
 func judgeSliExistsNum(nums []int, n int) bool {
 	for i := 0; i < len(nums); i++ {
 		if nums[i] == n {

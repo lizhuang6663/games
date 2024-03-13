@@ -15,7 +15,7 @@ import (
 // 1.前端发送的消息错误，导致 sli[index] 不存在。
 // 2.前端运行的顺序逻辑出现问题，导致后端房间中的 UserB == nil （后端代码已经加过了判断，确保不会出现 UserB == nil 的时候，调用 UserB.UserId）
 
-// 挑选成语
+// SelectWords 挑选成语
 func SelectWords(mes *model.Message) (str string, err error) {
 	// 分割 mes.Data
 	sli := strings.Split(mes.Data, " ")
@@ -40,7 +40,7 @@ func SelectWords(mes *model.Message) (str string, err error) {
 	return str, err
 }
 
-// 更改分数
+// ChangeScore 更改分数
 func ChangeScore(mes *model.Message) (str string, err error) {
 	// 分割 mes.Data
 	sli := strings.Split(mes.Data, " ")
@@ -64,7 +64,7 @@ func ChangeScore(mes *model.Message) (str string, err error) {
 	return "200", err
 }
 
-// 创建房间
+// CreateRoom 创建房间
 func CreateRoom(mes *model.Message) (err error) {
 	// 分割 mes.Data
 	sli := strings.Split(mes.Data, " ")
@@ -108,7 +108,7 @@ func CreateRoom(mes *model.Message) (err error) {
 	return err
 }
 
-// 玩家B进入房间
+// GoRoom 玩家B进入房间
 func GoRoom(mes *model.Message) (err error) {
 	// 分割 mes.Data
 	sli := strings.Split(mes.Data, " ")
@@ -200,7 +200,7 @@ func GoRoom(mes *model.Message) (err error) {
 	return err
 }
 
-// 玩家A点击开始游戏
+// BeginGame 玩家A点击开始游戏
 func BeginGame(mes *model.Message) (err error) {
 	// 分割 mes.Data
 	sli := strings.Split(mes.Data, " ")
@@ -259,7 +259,7 @@ func BeginGame(mes *model.Message) (err error) {
 	return
 }
 
-// 退出房间
+// ExitRoom 退出房间
 func ExitRoom(mes *model.Message) (err error) {
 	// 分割 mes.Data
 	sli := strings.Split(mes.Data, " ")
@@ -334,7 +334,7 @@ func ExitRoom(mes *model.Message) (err error) {
 	return
 }
 
-// 双人：开始游戏后，给A和B发送相同的词语
+// DoubleSelectWords 双人：开始游戏后，给A和B发送相同的词语
 func DoubleSelectWords(mes *model.Message) (err error) {
 	// 分割 mes.Data
 	sli := strings.Split(mes.Data, " ")
@@ -405,7 +405,7 @@ func DoubleSelectWords(mes *model.Message) (err error) {
 	return
 }
 
-// 共享双人分数、双人聊天
+// ShareScoreAndChat 共享双人分数、双人聊天
 func ShareScoreAndChat(mes *model.Message) (err error) {
 	// 分割 mes.Data
 	sli := strings.Split(mes.Data, " ")
@@ -454,7 +454,7 @@ func ShareScoreAndChat(mes *model.Message) (err error) {
 			score, err := strconv.Atoi(sli[3])
 			if err != nil {
 				fmt.Println("ShareScoreAndChat() strconv.Atoi() err = ", err)
-				return
+				return err
 			}
 			room.UserA.Score = score
 		}
@@ -482,7 +482,7 @@ func ShareScoreAndChat(mes *model.Message) (err error) {
 			score, err := strconv.Atoi(sli[3])
 			if err != nil {
 				fmt.Println("ShareScoreAndChat() strconv.Atoi() err = ", err)
-				return
+				return err
 			}
 			room.UserB.Score = score
 		}
@@ -492,7 +492,7 @@ func ShareScoreAndChat(mes *model.Message) (err error) {
 	return
 }
 
-// 游戏结束后，A或者B点击确认，给A或者B发确定，给玩家A发送一个包(包含玩家B的信息)，给玩家B发送一个包（包含玩家A的信息），A，B再次进入房间
+// GameOverEnterRoom 游戏结束后，A或者B点击确认，给A或者B发确定，给玩家A发送一个包(包含玩家B的信息)，给玩家B发送一个包（包含玩家A的信息），A，B再次进入房间
 func GameOverEnterRoom(mes *model.Message) (err error) {
 	// 分割 mes.Data
 	sli := strings.Split(mes.Data, " ")
@@ -543,7 +543,7 @@ func GameOverEnterRoom(mes *model.Message) (err error) {
 	return
 }
 
-// 给某个id发送消息
+// SedingMes 给某个id发送消息
 func SedingMes(id int, mes *model.Message) (err error) {
 	// 获取websocket链接
 	conn, ok := onlineMap.Get(id)
@@ -567,13 +567,13 @@ func SedingMes(id int, mes *model.Message) (err error) {
 	return err
 }
 
-// 打印当前所有房间的信息
+// PrintAllRoom 打印当前所有房间的信息
 func PrintAllRoom() {
 	fmt.Println("\n-------------------------------------")
 
 	for _, v := range roomMap.room {
-		fmt.Printf("当前存在的 roomId = %v，UserA = %v，UserB = %v", v.RoomId, v.UserA, v.UserB)
+		fmt.Printf("当前存在的 roomId = %v，UserA = %v，UserB = %v\n", v.RoomId, v.UserA, v.UserB)
 	}
 
-	fmt.Println("-------------------------------------\n")
+	fmt.Print("-------------------------------------\n\n")
 }

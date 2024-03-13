@@ -14,7 +14,7 @@ type WSTransfer struct {
 	Conn *websocket.Conn
 }
 
-// 读取（读取任意类型的结构体，并返回任意类型的结构体）
+// ReadPkg 读取（读取任意类型的结构体，并返回任意类型的结构体）
 func (this *WSTransfer) ReadPkg() (m interface{}, err error) {
 	mesType, data, err := this.Conn.ReadMessage()
 	if err != nil {
@@ -32,14 +32,6 @@ func (this *WSTransfer) ReadPkg() (m interface{}, err error) {
 		return mes, nil
 	}
 
-	// // 尝试解析为 model.ChatMes 类型
-	// var chatMes model.ChatMes
-	// err = json.Unmarshal(data, &chatMes)
-	// if err == nil {
-	// 	// fmt.Printf("ReadPkg() 反序列化后的数据为:chatMes.FromId = %v, chatMes.ToId = %v, chatMes.Score = %v\n", chatMes.FromId, chatMes.ToId, chatMes.Score)
-	// 	return chatMes, nil
-	// }
-
 	// 心跳检测（这里是读取数据，不是真正的心跳检测）
 	// 判断读取的数据是否为 "ping" 或者 "PING"
 	var s string
@@ -52,7 +44,7 @@ func (this *WSTransfer) ReadPkg() (m interface{}, err error) {
 	return nil, errors.New("不能解析的数据")
 }
 
-// 写（传入任意结构体，将结构体序列化，并写给前端）
+// WritePkg 写（传入任意结构体，将结构体序列化，并写给前端）
 func (this *WSTransfer) WritePkg(m interface{}) (err error) {
 	data, err := json.Marshal(m)
 	if err != nil {

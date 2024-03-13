@@ -5,7 +5,7 @@ import (
 	"sync"
 )
 
-// 安全锁、存放在线用户
+// OnlineMap 安全锁、存放在线用户
 type OnlineMap struct {
 	mu      sync.Mutex // 锁
 	clients map[int]*Client
@@ -23,7 +23,7 @@ func NewOnlineMap() *OnlineMap {
 	}
 }
 
-// 设置数据
+// Set 设置数据
 func (this *OnlineMap) Set(id int, conn *websocket.Conn) {
 	this.mu.Lock()
 	defer this.mu.Unlock()
@@ -35,7 +35,7 @@ func (this *OnlineMap) Set(id int, conn *websocket.Conn) {
 	this.clients[id] = &client
 }
 
-// 获取数据
+// Get 获取数据
 func (this *OnlineMap) Get(id int) (conn *websocket.Conn, ok bool) {
 	this.mu.Lock()
 	defer this.mu.Unlock()
@@ -46,14 +46,14 @@ func (this *OnlineMap) Get(id int) (conn *websocket.Conn, ok bool) {
 	return conn, ok
 }
 
-// 根据 id 删除数据
+// DelById 根据 id 删除数据
 func (this *OnlineMap) DelById(id int) {
 	this.mu.Lock()
 	defer this.mu.Unlock()
 	delete(this.clients, id)
 }
 
-// 根据 Conn 删除数据
+// DelByConn 根据 Conn 删除数据
 func (this *OnlineMap) DelByConn(conn *websocket.Conn) {
 	this.mu.Lock()
 	defer this.mu.Unlock()
