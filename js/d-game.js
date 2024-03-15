@@ -1,6 +1,6 @@
-import { score } from "./s-game"
+// import { score } from "./s-game.js"
 
-export var core = 0
+export var score = 0
 window.onload = () => {
     var startSign = $(".start-sign")
     var countdown = $(".countdown")
@@ -8,10 +8,11 @@ window.onload = () => {
     var characters = $$(".character")
     var clear = $(".clear")
     var back = $(".delete")
-    var scoreBox = $(".score-b")
+    var scoreb = $(".score-b")
+    var scorea = $(".score-a")
+
     var userImg = $('.img')
     var userName = $('.name')
-    var userData = JSON.parse(localStorage.getItem('user'))
 
 
 
@@ -28,6 +29,7 @@ window.onload = () => {
     const ws = new WebSocket('ws://172.20.10.3:8090/ws')
     let userData = JSON.parse(localStorage.getItem('user'))
     var id = userData.userId
+    var sex = userData.userSex
 
 
 
@@ -86,27 +88,33 @@ window.onload = () => {
     var useraSex = $('#useraImg')
     var userbSex = $('#userbImg')
 
-    var roomData = JSON.parse(localStorage.getItem('room'))
-    useraId.innerHTML = roomData.useraId
-    userbId.innerHTML = roomData.userbId
 
-    if (roomData.useraSex == '男') {
+    var usera = JSON.parse(localStorage.getItem('usera'))
+
+    //用户a在左边，即房主
+    useraId.innerHTML = usera.useraId
+    if (usera.useraSex === '男') {
         useraSex.src = 'images/male.jpg'
+
     } else {
         useraSex.src = 'images/female.jpg'
     }
 
-    if (roomData.userbSex == '男') {
+    var userb = JSON.parse(localStorage.getItem('userb'))
+
+    //用户b在左边，即被邀请人
+
+    userbId.innerHTML = userb.userbId
+    if (userb.userbSex === '男') {
         userbSex.src = 'images/male.jpg'
+
     } else {
         userbSex.src = 'images/female.jpg'
     }
 
 
-
     //单人模式下的ws
     doubleWS(ws)
-
 
 
 
@@ -131,32 +139,59 @@ window.onload = () => {
         };
 
 
+
         // 获取要监听的元素
-        var targetNode = $('.score-b')
+        var scoreA = $('.score-a');
+        var scoreB = $('.score-b');
+
 
         // 创建 Mutation Observer 实例
         var observer = new MutationObserver(function (mutations) {
             mutations.forEach(function (mutation) {
-                setInterval(function () {
-                    if (shouldSendData3) {
+                if (shouldSendData2) {
+                    setInterval(function () {
                         var roomData = JSON.parse(localStorage.getItem('room'))
                         // 发送数据
-                        ws.send(`{"Type":17,"Data":"${id} ${roomData.roomId} ${score}"}`)
-                    }
-                }, 1000); // 每秒发送一次数据
+                        ws.send(`{"Type":17,"Data":"${userData.userId} ${userData.userSex} ${roomData.roomId} ${score}"}`)
+
+                    }, 1000); // 每秒发送一次数据
+                }
 
             });
         });
 
+
         // 配置观察器的选项
         var config = { childList: true, subtree: true, characterData: true };
 
-        // 启动观察器并传入目标节点和配置
-        observer.observe(targetNode, config);
+        //当前玩家为usera
+        //监听usera的盒子，将分数传出去
+        var scoreBox = $('score-box')
+
+        console.log(scoreBox);
+        console.log(scoreA);
+        console.log(scoreB);
+        if (scoreBox === scoreA) {
+            console.log("当前玩家为usera,数据已经传出");
+            // 启动观察器并传入目标节点和配置
+            observer.observe(scoreA, config);
+
+        } else if (scoreBox === scoreB) {
+            //当前玩家为userb
+            //监听userb的盒子，将分数传出去
+            console.log("当前玩家为userb,数据已经传出");
+
+            observer.observe(scoreB, config);
+
+        } else {
+            console.log('判断条件不成立');
+        }
+
+
 
         // 监听消息事件
         ws.onmessage = function (event) {
-            console.log("ttttttttttttttttt");
+            // console.log("ttttttttttttttttt");
             console.log(event);
             var receivedType = JSON.parse(event.data).type;
             var receivedData = JSON.parse(event.data).data;
@@ -168,17 +203,38 @@ window.onload = () => {
             if (receivedData === "200" && receivedType === 19) {
                 // 停止发送数据
                 shouldSendData3 = false;
+                console.log("收到19");
             }
 
 
             if (receivedType === 17) {
-                shouldSendData2 = false;
+                console.log("收到17");
+                shouldSendData2 = false
                 console.log(receivedData);
-                var scoreA = $('.score-a')
-                scoreA.innerHTML = receivedData
+                // 使用 split() 方法将字符串以空格分割成数组
+                let parts = receivedData.split(" ");
+
+                // 数组解构
+                let [userId, userSex, roomId, score] = parts;
+                //如果发出的玩家等于userb
+                if (userId == userbId) {
+                    console.log("接收到userb的数据,改变usera的内容");
+                    //usera的框发生变化
+                    scoreA.innerHTML = score
+                } else {
+                    //如果发出的玩家等于usera
+                    //userb的框发生变化
+                    console.log("接收到usera的数据,改变userb的内容");
+
+                    scoreB.innerHTML = score
+                }
+
             }
 
 
+            if (receivedType === 16) {
+                console.log("收到16");
+            }
 
 
         };
@@ -216,17 +272,17 @@ window.onload = () => {
     }
 
 
-    //个人信息的加载
-    var userMessageLoad = function (userData) {
-        if (userData.userSex == '男') {
-            userImg.src = 'images/male.jpg'
+    // //个人信息的加载
+    // var userMessageLoad = function (userData) {
+    //     if (userData.userSex == '男') {
+    //         userImg.src = 'images/male.jpg'
 
-        } else {
-            userImg.src = 'images/female.jpg'
+    //     } else {
+    //         userImg.src = 'images/female.jpg'
 
-        }
-        userName.innerHTML = userData.userId
-    }
+    //     }
+    //     userName.innerHTML = userData.userId
+    // }
 
 
     //将传过来的数据改变格式
@@ -237,7 +293,7 @@ window.onload = () => {
     }
 
 
-    userMessageLoad(userData)
+    // userMessageLoad(userData)
     // console.log(idiomDataChange());
 
 
@@ -247,7 +303,15 @@ window.onload = () => {
         // 60 秒的倒计时
         startCountdown(60);
 
+        var usera = JSON.parse(localStorage.getItem('usera'))
 
+        if (usera.useraId === userData.userId) {
+            var scoreBox = $('.score-a')
+
+        } else {
+            var scoreBox = $('.score-b')
+
+        }
 
         var idiomData = JSON.parse(localStorage.getItem('d-idiomData'))
         console.log(idiomData);
@@ -306,6 +370,9 @@ window.onload = () => {
                             console.log("拼写成功");
                             itemCurrentIndex++;
                             console.log("item" + itemCurrentIndex);
+                            foundMatch = true;
+                            score += 5
+                            scoreBox.textContent = score
                             if (itemCurrentIndex == 4) {
                                 console.log("123456789");
                                 dataLoad(pools2)
@@ -313,12 +380,10 @@ window.onload = () => {
                                 console.log("7777777777777777");
                                 dataLoad(pools3)
                             } else if (itemCurrentIndex == 12 && gameover == false) {
-                                scoreLoad(score)
+                                scoreLoad(score, scoreBox)
                                 window.location.href = 'victory.html'
                             }
-                            foundMatch = true;
-                            score += 5
-                            scoreBox.textContent = score
+
                             setTimeout(() => {
                                 // 清除文本框的内容
                                 characters.forEach(function (character) {
@@ -420,8 +485,8 @@ window.onload = () => {
                 gameover = true
 
                 //返回分数写入下一页面
-
-                scoreLoad(score)
+                var scoreBox = $('score-box')
+                scoreLoad(score, scoreBox)
 
                 window.location.href = 'defeat.html'
 
@@ -447,13 +512,23 @@ window.onload = () => {
         return resultArray;
     }
 
-    function scoreLoad(userScore) {
+    function scoreLoad(userScore, scoreBox) {
         //将本次分数放进本地存储中
         localStorage.setItem('currentScore', JSON.stringify(userScore))
+        var scoreA = $('.score-a')
+        var scoreB = $('.score-b')
+        if (scoreBox === scoreA) {
+            //存入对方的分数
+            localStorage.setItem('fightScore', JSON.stringify(Number(scoreB.innerHTML)))
+        } else {
+            localStorage.setItem('fightScore', JSON.stringify(Number(scoreA.innerHTML)))
+
+        }
+
         // 从本地存储中获取对象数组
         var objectArray = JSON.parse(localStorage.getItem('user'));
 
-        objectArray.score += userScore
+        objectArray.score = userScore
         // 将更改后的对象数组转换回字符串，并存回本地存储
         localStorage.setItem('user', JSON.stringify(objectArray));
 

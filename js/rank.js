@@ -28,6 +28,202 @@ doubleBox.addEventListener('click', () => {
 
 
 
+var userData = JSON.parse(localStorage.getItem('user'))
+
+// window.onload = () => {
+var arrow = $('.arrow')
+var rank = $('.rank')
+var rankImg = $$(".rank-img")
+var rankId = $$(".rank-id")
+var scores = $$('.score')
+var singleBox = $(".single-box")
+var doubleBox = $(".double-box")
+var img = $('.img')
+var name = $('.name')
+var inputRoom = $('.input-room')
+
+var myImg = $('.myImg')
+var myId = $('.myId')
+
+// window.onload = () => {
+
+var ws = new WebSocket('ws://172.20.10.3:8090/ws')
+
+
+// 标志变量，用于跟踪是否应该发送数据
+var shouldSendData1 = true;
+var shouldSendData2 = true;
+var shouldSendData3 = true;
+
+
+var roomJoin = $('.room-join')
+// 标志变量，用于跟踪是否应该发送数据
+var shouldSendData1 = true;
+var shouldSendData2 = true;
+
+
+
+// 监听连接打开事件
+ws.onopen = function (event) {
+    console.log(`WebSocket 连接状态： ${ws.readyState}`)
+    setInterval(function () {
+        if (shouldSendData3) {
+            var userData = JSON.parse(localStorage.getItem('user'))
+            var id = userData.userId
+            // 发送数据
+            ws.send(`{"Type":2,"Data":"${id}"}`)
+        }
+    }, 1000); // 每秒发送一次数据
+};
+
+//点击加入房间
+roomJoin.addEventListener('click', () => {
+    var roomNum = inputRoom.value
+    var playerBId = userData.userId
+
+    //玩家b进入房间
+
+    // 发送数据
+    ws.send(`{"Type":12,"Data":"${playerBId} ${roomNum}"}`)
+
+
+});
+
+
+// 监听消息事件
+ws.onmessage = function (event) {
+    // console.log("ttttttttttttttttt");
+    console.log(event);
+    var receivedType = JSON.parse(event.data).type;
+    var receivedData = JSON.parse(event.data).data;
+
+    if (receivedData === "200" && receivedType === 2) {
+        // 停止发送数据
+        shouldSendData3 = false;
+    }
+
+    //玩家b进入房间
+    // 如果收到后端发送的数据
+    if (receivedData === "200" && receivedType === 12) {
+
+        console.log("收到12");
+        window.location.href = 'waiting-b.html'
+    }
+    //房间不存在
+    if (receivedData === "房间不存在" && receivedType === 12) {
+
+        // 停止发送数据
+        shouldSendData1 = false;
+        alert('房间不存在')
+
+    }
+    //房间已满
+    if (receivedData === "房间已满" && receivedType === 12) {
+        // 停止发送数据
+        shouldSendData1 = false;
+        alert('房间已满')
+
+    }
+    //玩家b进入房间，b收到玩家a的包
+    if (receivedType === 13) {
+        console.log(receivedData);
+        var roomNum = inputRoom.value
+        localStorage.setItem("roomNum", JSON.stringify(roomNum))
+
+        // 使用 split() 方法将字符串以空格分割成数组
+        let parts = receivedData.split(" ");
+        console.log("dsfdsfsdfdsdfdsfsdfdsfs");
+        // 数组解构
+        let [userId, userSex] = parts;
+        var userData = JSON.parse(localStorage.getItem('user'))
+        var room = { "roomId": roomNum, "userbId": userId, "userbSex": userSex }
+        localStorage.setItem("room", JSON.stringify(room))
+        var userb = { "userbId": userData.userId, "userbSex": userData.userSex }
+        localStorage.setItem("userb", JSON.stringify(userb))
+        var usera = { "useraId": userId, "useraSex": userSex }
+        localStorage.setItem("usera", JSON.stringify(usera))
+        console.log("dsfdsfsdfdsdfdsfsdfdsfs");
+
+
+    }
+    if (receivedType === 16) {
+        console.log("收到16");
+
+    }
+
+};
+
+//当 WebSocket 连接关闭时触发的事件处理程序函数
+ws.onclose = data => {
+    console.log('WebSocket连接已关闭')
+    console.log(data);
+}
+
+//当发生 WebSocket 错误时触发的事件处理程序函数。
+ws.onerror = () => {
+    console.error('websocket fail');
+}
+
+// // 监听窗口关闭事件
+// window.onbeforeunload = function () {
+//     window.location.href = 'select.html'
+// }
+
+
+
+
+
+
+
+
+// //心跳包部分////////////////////////////////////////////
+
+// // 发送心跳包函数
+// function sendHeartbeat() {
+//     if (ws.readyState === WebSocket.OPEN) {
+//         ws.send('PING');
+//     }
+// }
+
+// // 设置定时器，每隔10秒发送一次心跳包
+// const heartbeatInterval = setInterval(sendHeartbeat, 10000);
+
+// ws.lastReceivedTime = new Date().getTime();
+// // 监听消息事件
+// ws.addEventListener('message', function (event) {
+//     const receivedData = JSON.parse(event.data);
+
+//     // 收到后端的心跳包
+//     if (receivedData === 'PONG') {
+//         ws.lastReceivedTime = new Date().getTime(); // 更新 lastReceivedTime
+//     }
+// });
+
+// // 定义超时时间（10秒）
+// const timeoutDuration = 11000;
+
+// // 设置定时器，检测是否超时
+// const timeoutTimer = setInterval(function () {
+//     var currentTime = new Date().getTime(); // 获取当前时间
+//     var lastReceivedTime = ws.lastReceivedTime; // 获取上次接收到消息的时间
+//     var elapsedTime = currentTime - lastReceivedTime; // 计算经过的时间
+
+//     console.log(currentTime);
+//     console.log(lastReceivedTime);
+//     console.log(elapsedTime);
+
+//     // 如果超过超时时间，则关闭 WebSocket 连接
+//     if (elapsedTime > timeoutDuration) {
+//         clearInterval(heartbeatInterval);
+//         clearInterval(timeoutTimer);
+//         ws.close();
+//         console.log('WebSocket connection closed due to heartbeat timeout.');
+//     }
+// }, 1000);  // 每秒检测一次
+
+
+
+// //心跳包部分////////////////////////////////////////////////////////////
 
 
 

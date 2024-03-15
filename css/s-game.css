@@ -23,7 +23,7 @@
 .countdown-box {
     border: #1c478e solid 2px;
     height: 4vh;
-    width: 73vw;
+    width: 65vw;
     background-color: #f1f1f1;
     float: left;
     margin-top: 3vh;
@@ -36,6 +36,14 @@
     height: 100%;
     width: 100%;
     transition: width 1s linear;
+}
+
+.music-box {
+    float: right;
+    margin-top: 1.5vh;
+    margin-right: 5vw;
+    width: 9vw;
+    height: 5vh;
 }
 
 .image {

@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<hea>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>玩家2等待房间</title>
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/waiting-a.css">
-    <link rel="stylesheet" href="//at.alicdn.com/t/c/font_4427063_2niv31tpxzz.css">
+    <link rel="stylesheet" href="//at.alicdn.com/t/c/font_4427063_x8bu2053gb.css">
     <script src="js/function.js"></script>
-    <script src="js/rank.js"></script>
     <script src="js/waiting-b.js"></script>
-</hea d>
+</head>
 
 <body>
     <div class="whole-box">
@@ -30,15 +29,8 @@
         </div>
         <div class="chat-box">
             <div class="chat-top">
-                <ul>
-                    <li>
-                        <div class="rival"></div>
-                        <div class="rival-message"></div>
-                    </li>
-                    <li>
-                        <div class="my-message"></div>
-                        <div class="my"></div>
-                    </li>
+                <ul class="chat-ul">
+
                 </ul>
             </div>
             <div class="chat-bottom">
@@ -48,7 +40,7 @@
 
         </div>
         <div class="op-box">
-            <div class="back-box"><i class="iconfont icon-shouye" style="font-size: 12vw;"></i></div>
+            <div class="back-box" id="back-box"><i class="iconfont icon-shouye" style="font-size: 12vw;"></i></div>
 
         </div>
 
@@ -72,10 +64,10 @@
     }
 
 
-    backBox.addEventListener('click', () => {
-        // 跳转到另一个页面
-        window.location.href = 'select.html';
-    });
+    // backBox.addEventListener('click', () => {
+    //     // 跳转到另一个页面
+    //     window.location.href = 'select.html';
+    // });
 
 
 </script>

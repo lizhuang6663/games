@@ -68,7 +68,53 @@ h2 {
     width: 90vw;
     background-color: #5bd148;
     margin-left: 5vw;
+    overflow: auto;
 }
+
+.chat-top li {
+    width: 90vw;
+    margin-top: 1vh;
+    background-color: #d8ea60;
+    line-height: 5vh;
+    font-size: 4vw;
+}
+
+.rival,
+.my {
+
+    display: inline-block;
+    width: 10vw;
+    height: 5vh;
+    border-radius: 50%;
+}
+
+.rival {
+    background-color: #53873a;
+}
+
+.my {
+
+    background-color: #ca6363;
+}
+
+.rival-message,
+.my-message {
+    display: inline-block;
+    width: 78vw;
+
+    word-wrap: break-word;
+}
+
+.rival-message {
+    background-color: #ca3eca;
+}
+
+.my-message {
+    background-color: #4abcc6;
+
+}
+
+
 
 .chat-bottom {
     height: 6vh;
@@ -89,7 +135,7 @@ h2 {
     outline: none;
     box-sizing: border-box;
     border-radius: 3px;
-    color: #fff;
+    /* color: #fff; */
     width: 60vw;
     height: 4vh;
     margin-left: 2vw;
@@ -97,6 +143,7 @@ h2 {
 }
 
 .send {
+    /* display: none; */
     float: right;
     border: 3px solid #894a4a;
     width: 18vw;

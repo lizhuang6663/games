@@ -10,7 +10,9 @@ window.onload = () => {
     var userImg = $('.img')
     var userName = $('.name')
     var userData = JSON.parse(localStorage.getItem('user'))
-
+    var musicBox = $('.music-box')
+    var music = $('#bgMusic')
+    var musicIcon = $('#musicIcon')
 
 
     //用户拼好的汉字
@@ -22,6 +24,17 @@ window.onload = () => {
     var gameover = false
 
 
+    musicBox.addEventListener('click', function () {
+        console.log(1);
+        if (musicIcon.className.includes('iconfont icon-shengyinguanbi')) {
+            musicIcon.className = 'iconfont icon-shengyin'
+            music.play()
+        } else {
+            musicIcon.className = 'iconfont icon-shengyinguanbi'
+            music.pause()
+        }
+
+    })
 
 
 
@@ -127,6 +140,9 @@ window.onload = () => {
                             console.log("拼写成功");
                             itemCurrentIndex++;
                             console.log("item" + itemCurrentIndex);
+                            foundMatch = true;
+                            score += 5
+                            scoreBox.textContent = score
                             if (itemCurrentIndex == 4) {
                                 console.log("123456789");
                                 dataLoad(pools2)
@@ -137,9 +153,7 @@ window.onload = () => {
                                 scoreLoad(score)
                                 window.location.href = 'victory.html'
                             }
-                            foundMatch = true;
-                            score += 5
-                            scoreBox.textContent = score
+
                             setTimeout(() => {
                                 // 清除文本框的内容
                                 characters.forEach(function (character) {
@@ -268,13 +282,15 @@ window.onload = () => {
         return resultArray;
     }
 
+
+
     function scoreLoad(userScore) {
         //将本次分数放进本地存储中
         localStorage.setItem('currentScore', JSON.stringify(userScore))
         // 从本地存储中获取对象数组
         var objectArray = JSON.parse(localStorage.getItem('user'));
 
-        objectArray.score += userScore
+        objectArray.score = userScore
         // 将更改后的对象数组转换回字符串，并存回本地存储
         localStorage.setItem('user', JSON.stringify(objectArray));
 

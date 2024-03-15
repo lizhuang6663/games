@@ -59,11 +59,18 @@
 </html>
 <script>
     var yScore = $('.y-score')
+    var oScore = $('.o-score')
 
     var currentScore = JSON.parse(localStorage.getItem('currentScore'))
     yScore.innerHTML = `your score:${currentScore}`
     var sure = $('.sure')
     sure.onclick = () => {
         window.location.href = 'select.html'
+    }
+    var fightScore = JSON.parse(localStorage.getItem('fightScore'))
+    if (fightScore) {
+        oScore.innerHTML = `rival score:${fightScore}`
+    } else {
+        oScore.innerHTML = ``
     }
 </script>

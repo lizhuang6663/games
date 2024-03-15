@@ -33,9 +33,13 @@ ws.onmessage = function (event) {
     // console.log("ttttttttttttttttt");
     console.log(event);
     var receivedType = JSON.parse(event.data).type;
+    if (receivedType === 2) {
+        shouldSendData1 = false;
+
+    }
     // 如果收到后端发送的数据
     if (receivedType === 4) {
-        shouldSendData3 = false;
+        shouldSendData2 = false;
     }
 };
 

@@ -11,6 +11,8 @@ window.onload = () => {
 
 
 
+
+
     //加载用户的信息
     var userData = JSON.parse(localStorage.getItem('user'))
     myId.innerHTML = userData.userId
@@ -45,12 +47,8 @@ window.onload = () => {
 
     })
 
+
 }
-
-
-
-
-
 
 
 
@@ -62,6 +60,7 @@ var shouldSendData2 = true;
 var shouldSendData3 = true;
 var shouldSendData4 = true;
 var shouldSendData5 = true;
+var shouldSendData6 = true;
 
 
 
@@ -190,6 +189,39 @@ function doubleWs_a(ws) {
         }, 1000); // 每秒发送一次数据
 
     });
+    var chatUl = $('.chat-ul')
+    var sendMes = $('.send-message')
+    var send = $('.send')
+    var str = ''
+
+    //发送信息都从右边发
+    send.addEventListener('click', () => {
+        var message = sendMes.value
+        var userData = JSON.parse(localStorage.getItem('user'))
+        var roomData = JSON.parse(localStorage.getItem('room'))
+
+        // 发送数据
+        ws.send(`{"Type":18,"Data":"${userData.userId} ${userData.userSex} ${roomData.roomId} ${message}"}`)
+
+        if (userData.userSex == '男') {
+            var src = 'images/male.jpg'
+        } else {
+            var src = 'images/female.jpg'
+        }
+        str += `<li>
+                        <div class="my-message">
+                           ${message}
+                        </div>
+                        <img class="my" src=${src}></img>
+                    </li>`
+        chatUl.innerHTML = str
+        sendMes.value = ''
+
+    })
+
+
+
+
 
     // 监听消息事件
     ws.onmessage = function (event) {
@@ -207,7 +239,7 @@ function doubleWs_a(ws) {
             // 停止发送数据
             shouldSendData1 = false;
         }
-        //玩家b进入房间，收到玩家b的包
+        //玩家b进入房间，a收到玩家b的包
         if (receivedType === 13) {
             console.log(receivedData);
 
@@ -215,39 +247,62 @@ function doubleWs_a(ws) {
             let parts = receivedData.split(" ");
 
             // 数组解构
-            let [user1Id, user1Sex, user2Id, user2Sex] = parts;
-            if (user2Id !== "0") {
+            let [userId, userSex] = parts;
+            if (userId !== "0") {
+                console.log("玩家b加入房间");
                 var link = window.location.href
-                var room = { "roomId": link, "userbId": user1Id, "userbSex": user1Sex, "useraId": user2Id, "useraSex": user2Sex }
+                var userData = JSON.parse(localStorage.getItem('user'))
+                var room = { "roomId": link, "userbId": userId, "userbSex": userSex }
                 localStorage.setItem("room", JSON.stringify(room))
+                var usera = { "useraId": userData.userId, "useraSex": userData.userSex }
+                localStorage.setItem("usera", JSON.stringify(usera))
+                var userb = { "userbId": userId, "userbSex": userSex }
+                localStorage.setItem("userb", JSON.stringify(userb))
+
                 //渲染玩家b的信息
                 var rivalId = $('.rivalId')
-                rivalId.innerHTML = user2Id
-                if (user2Sex == '男') {
+                rivalId.innerHTML = userId
+                if (userSex === '男') {
                     rivalImg.src = 'images/male.jpg'
                 } else {
                     rivalImg.src = 'images/female.jpg'
                 }
+
                 //开始游戏显现出来
                 var gameRun = $('.game-run')
                 gameRun.style.display = 'block'
-                // 存储到本地
-                // localStorage.setItem('idiomData', JSON.stringify(receivedData));
+                //发送按钮显现出来
+                var send = $('.send')
+                send.style.display = 'block'
+
             } else {
+                console.log("玩家b退出");
                 //消除玩家b的信息
                 var rivalId = $('.rivalId')
                 rivalId.innerHTML = '???'
-                rivalImg.innerHTML = '+'
+                rivalImg.src = ''
                 //开始游戏取消显示
                 var gameRun = $('.game-run')
                 gameRun.style.display = 'none'
+
+
             }
 
         }
-        if (receivedType === 14 && receivedData === '200') {
-            shouldSendData2 = false;
+
+        if (receivedType === 16) {
+            // 停止发送数据
+            shouldSendData5 = false;
+            console.log(receivedData);
+            // 存储到本地
+            localStorage.setItem('d-idiomData', JSON.stringify(receivedData));
             //进入游戏页面
             window.location.href = 'double-game.html'
+        }
+        if (receivedType === 14 && receivedData === '200') {
+            shouldSendData2 = false;
+
+
         }
         //接收退出房间信息后退出房间
         if (receivedType === 15 && receivedData === '200') {
@@ -257,30 +312,63 @@ function doubleWs_a(ws) {
             window.location.href = 'select.html';
         }
 
-        if (receivedType === 16) {
-            // 停止发送数据
-            shouldSendData5 = false;
-            console.log(receivedData);
-            // 存储到本地
-            localStorage.setItem('d-idiomData', JSON.stringify(receivedData));
+        if (receivedType === 19 && receivedData === '200') {
+
         }
 
-    };
+        //接收对方的消息（位于左侧）
+        if (receivedType === 18) {
+            console.log("接收到对方的消息");
 
+            // 使用 split() 方法将字符串以空格分割成数组
+            let parts = receivedData.split(" ");
 
-    //当 WebSocket 连接关闭时触发的事件处理程序函数
-    ws.onclose = data => {
-        console.log('WebSocket连接已关闭')
-        console.log(data);
+            // 数组解构
+            let [rivalId, rivalSex, roomId, chatMes] = parts;
+
+            if (rivalSex === '男') {
+                var src = 'images/male.jpg'
+            } else {
+                var src = 'images/female.jpg'
+            }
+
+            str += `<li>
+            <img class="rival" src=${src}></img>
+                        <div class="rival-message">
+                           ${chatMes}
+                        </div>
+                    </li>`
+            var chatUl = $('.chat-ul')
+
+            chatUl.innerHTML = str
+
+        }
+
     }
 
-    //当发生 WebSocket 错误时触发的事件处理程序函数。
-    ws.onerror = () => {
-        console.error('websocket fail');
-    }
+};
 
-    // 监听窗口关闭事件
-    window.onbeforeunload = function () {
-        ws.close();
-    }
+
+//当 WebSocket 连接关闭时触发的事件处理程序函数
+ws.onclose = data => {
+    console.log('WebSocket连接已关闭')
+    console.log(data);
+}
+
+//当发生 WebSocket 错误时触发的事件处理程序函数。
+ws.onerror = () => {
+    console.error('websocket fail');
+}
+
+// 监听窗口关闭事件
+window.onbeforeunload = function () {
+    setInterval(function () {
+        if (shouldSendData3) {
+            var userData = JSON.parse(localStorage.getItem('user'))
+            var link = window.location.href
+
+            // 发送数据
+            ws.send(`{"Type":15,"Data":"${userData.userId} ${link}"}`)
+        }
+    }, 1000); // 每秒发送一次数据
 }
