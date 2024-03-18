@@ -33,9 +33,12 @@ package model
 {"type":12,"data":"房间不存在"}
 {"type":12,"data":"房间已满"}
 
+
 3.当玩家B进入房间的时候，后端会给玩家A发送一个包(包含玩家B的信息)，给玩家B发送一个包（包含玩家A的信息）
+前端发送{"type" : 13, "data" : "roomId"}
 后端给A发送：{"type" : 13, "data" : "UserIdB B的性别"}
 后端给B发送：{"type" : 13, "data" : "UserIdA A的性别"}
+
 
 4.玩家A点击开始游戏
 前端发送{"type" : 14, "data" : "UserAId RoomId"}
@@ -66,11 +69,15 @@ package model
 前端发送：{"type" : 18, "data" : "userId userSex roomId chatMes"}
 后端给发消息的主人发送{"type" : 19, "data" : "200"}，后端给另一个人发送 {"type" : 18, "data" : "userId userSex roomId chatMes"} （如果房间中不存在另一个用户，就不发送）
 
+
+
 9.游戏结束后，A或者B点击确认，给A或者B发确定，给玩家A发送一个包(包含玩家B的信息)，给玩家B发送一个包（包含玩家A的信息），A，B再次进入房间
 前端的玩家A或者玩家B发送：{"type" : 20, "data" : "userId roomId"}（玩家A和玩家B返回房间页面）
 后端给前端的发送者发送确认{"type" : 20, "data" : "200"}
 后端给A发送：{"type" : 13, "data" : "UserIdB B的性别"}
 后端给B发送：{"type" : 13, "data" : "UserIdA A的性别"}
+
+回到房间后，后端需要在roomMap中共把两个用户的分数清零
 
 */
 
@@ -128,3 +135,9 @@ type Message struct {
 // 进入房间：点击房间链接，直接进入房间：通过判断链接中的room属性
 
 // 断线重连：（前端是否知道用户断开了websocket链接）如果前端心跳检测没有收到后端的信息，就是用户网络断线了。前端一直发送断线的用户数据，后端接收后，更新用户的conn。
+
+// 9.双人游戏结束
+// 前端发送：{"type" : 20, "data" : "userId userSex roomId score time"}
+// 前端发送数据完之后，不能跳转页面，直到收到后端发送的数据
+// 当后端收到房间中的两个用户发送的消息时，后端给A发送{"type" : 20, "data" : "userIdA userSex score time userIdB userSex score time"}，后端给B发送 {"type" : 20, "data" : "userIdB userSex score time userIdA userSex score time"}
+// 前端接收到数据后，跳转胜利或者失败页面

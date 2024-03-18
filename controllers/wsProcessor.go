@@ -53,7 +53,7 @@ func WSBegin(w http.ResponseWriter, r *http.Request) {
 
 	for {
 		// 先在这里休眠100秒，100秒后，如果可以从channel中取出数据，就不关闭conn，如果不能取出数据就关闭conn
-		time.Sleep(1000 * time.Second)
+		time.Sleep(10000 * time.Second)
 
 		select {
 		case <-ch: // 如果可以从ch中获得数据，就表明用户仍在活动，不需要断开链接
@@ -211,6 +211,10 @@ func process(conn *websocket.Conn, ch chan int) {
 				err = GoRoom(&mes)
 				errStr = "GoRoom(&mes)"
 
+			case 13:
+				err = SedingInformationOfBoth(&mes)
+				errStr = "SedingInformationOfBoth(&mes)"
+
 			case 14: // 玩家A点击开始游戏
 				err = BeginGame(&mes)
 				errStr = "BeginGame(&mes)"
@@ -251,7 +255,7 @@ func process(conn *websocket.Conn, ch chan int) {
 		// 心跳检测
 		// 判断是否可以转换为 string 类型
 		s, ok := m.(string)
-		if ok && s == "PING" {
+		if ok && (s == "PING" || s == "ping") {
 			// 回复客户端心跳消息
 			err = wsTransfer.WritePkg("PONG")
 			if err != nil {
