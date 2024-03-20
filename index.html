@@ -136,10 +136,8 @@
 </html>
 <script>
     window.onload = () => {
-        //登录界面
-        //一开始进入到的界面
-
-
+        //登录界面(一开始进入到的界面)
+        //用户类
         class User {
             constructor(userId, userPwd, userSex, score) {
                 this.userId = userId;
@@ -148,28 +146,32 @@
                 this.score = score;
 
             }
-
         }
-        var user = new User()
+
+        //初始化一个用户对象
+        let user = new User()
 
 
-        var loginBtn = $(".login-btn")
-        var tipBox = $('.tip-box')
+        let loginBtn = $(".login-btn")
+        let tipBox = $('.tip-box')
 
 
+        //点击登录按钮执行loginTurnToPage函数
+        loginBtn.addEventListener('click', loginTurnToPage)
+
+
+        //点击登录核对用户信息后跳转页面
         function loginTurnToPage() {
-            var userId = Number($('#user-id').value)
-            var password = $('#psw').value
-            // var user = new User(111, 'aaa', '男', 0)
-            // localStorage.setItem('user', JSON.stringify(user));
+            //获取两个框的输入值
+            let userId = Number($('#user-id').value)
+            let password = $('#psw').value
 
-            console.log(!isNaN(userId));
 
-            if (!isNaN(userId)) {
-                // console.log(12);
-
+            //判断用户id密码不为空的情况
+            if (!isNaN(userId) && userId !== 0) {
+                //用http连接发送登录数据
                 axios({
-                    url: 'http://172.20.10.3:8090/login',
+                    url: 'http://39.105.7.43:8090/login',
                     method: 'post',
                     data: {
                         "UserId": userId,
@@ -179,40 +181,41 @@
                 }).then(result => {
                     //获取成功
                     console.log(result)
+                    //出错情况
                     if (result.data.code == 404 || result.data.code == 401 || result.data.code == 409) {
                         console.log(result.data.error);
+                        //将出错情况放进盒子提示内容中
                         tipBox.textContent = result.data.error
-
                     }
+                    //登陆成功
                     if (result.data.code == 200) {
                         console.log("登录成功");
-                        var userId = result.data.user.userId
-                        var userPwd = result.data.user.userPwd
-                        var userSex = result.data.user.userSex
-                        var score = result.data.user.score
+                        //解析传过来的数据
+                        let userId = result.data.user.userId
+                        let userPwd = result.data.user.userPwd
+                        let userSex = result.data.user.userSex
+                        let score = result.data.user.score
+                        //将数据存入user对象中
                         user.userId = userId
                         user.userPwd = userPwd
                         user.userSex = userSex
                         user.score = score
-                        // 存储到本地
+                        // user对象的数据存储到本地
                         localStorage.setItem('user', JSON.stringify(user));
-
+                        //跳转到选择界面
                         window.location.href = "select.html";
 
                     }
-
-
+                    //连接失败情况
                 }).catch(error => {
                     //失败
                     console.log(error)
                 })
             } else {
-                tipBox.textContent = 'id格式有误'
+                tipBox.textContent = 'id或密码格式有误'
             }
 
         }
-
-        loginBtn.addEventListener('click', loginTurnToPage)
     }
 
 </script>

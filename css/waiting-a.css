@@ -35,7 +35,7 @@ h2 {
     border-radius: 50%;
     width: 30vw;
     height: 15vh;
-    background-color: cadetblue;
+    background-color: #d3cbc2;
 }
 
 .rivalImg {
@@ -53,12 +53,12 @@ h2 {
     display: inline-block;
     width: 13vw;
     height: 7vh;
-    background-color: #fff;
+    /* background-color: #fff; */
 }
 
 .chat-box {
     text-align: center;
-    background-color: #5d5bd9;
+    background-color: #894a4a;
     width: 100vw;
     height: 40vh;
 }
@@ -66,7 +66,9 @@ h2 {
 .chat-top {
     height: 25vh;
     width: 90vw;
-    background-color: #5bd148;
+    background-color: #bc7825;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
     margin-left: 5vw;
     overflow: auto;
 }
@@ -74,7 +76,7 @@ h2 {
 .chat-top li {
     width: 90vw;
     margin-top: 1vh;
-    background-color: #d8ea60;
+    /* background-color: #d8ea60; */
     line-height: 5vh;
     font-size: 4vw;
 }
@@ -101,16 +103,16 @@ h2 {
 .my-message {
     display: inline-block;
     width: 78vw;
-
+    border-radius: 10px;
     word-wrap: break-word;
 }
 
 .rival-message {
-    background-color: #ca3eca;
+    background-color: #df84df;
 }
 
 .my-message {
-    background-color: #4abcc6;
+    background-color: #59cfda;
 
 }
 
@@ -118,14 +120,16 @@ h2 {
 
 .chat-bottom {
     height: 6vh;
-    background-color: #a4d242;
+    background-color: #e7c333;
     margin-left: 5vw;
     padding-top: 1vh;
     width: 90vw;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
 }
 
 .op-box {
-    background-color: #46ddd3;
+    background-color: #894a4a;
     width: 100vw;
     height: 15vh;
 }
@@ -143,9 +147,9 @@ h2 {
 }
 
 .send {
-    /* display: none; */
+    display: none;
     float: right;
-    border: 3px solid #894a4a;
+    border: 2px solid #894a4a;
     width: 18vw;
     height: 4vh;
     margin-right: 2vw;
@@ -163,7 +167,7 @@ h2 {
 .game-run {
     display: none;
     float: right;
-    border: 3px solid #894a4a;
+    border: 3px solid #6b3a3a;
     width: 35vw;
     height: 7vh;
     margin-top: 1.5vh;
@@ -199,9 +203,9 @@ h3 {
 
 .link {
     margin: auto;
-    height: 8vh;
+    height: 12vh;
     width: 95vw;
-    background-color: #49d2e7;
+    background-color: #ccc;
 }
 
 .invite-link {

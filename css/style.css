@@ -28,7 +28,7 @@
 .logo {
     width: 70vw;
     margin: 0 auto;
-    background-color: blueviolet;
+    background-color: rgb(243, 151, 105);
     height: 14vh;
     margin-top: 17vh;
 }
@@ -93,8 +93,19 @@
     background-color: #ef8d8d;
 }
 
+.input-room {
+    margin-left: 1vw;
+    margin-top: 1vh;
+    width: 42vw;
+    height: 4vh;
+}
+
 .room-join {
-    background-color: #5aaec5;
+    height: 4vh;
+    width: 20vw;
+    font-size: 5vw;
+    margin-right: 1vw;
+    margin-top: 1vh;
     float: right;
 }
 
@@ -153,7 +164,6 @@ h2 {
     float: right;
     width: 20vw;
     height: 7vh;
-    background-color: #d11bde;
     font-size: 6vw;
     text-align: center;
     line-height: 7vh;
@@ -172,20 +182,21 @@ h2 {
     height: 5vh;
     background-color: #c5bd98;
     color: #726751;
+    border: solid .2vw #726751;
     font-size: 6vw;
 
 }
 
 #item-title div:nth-child(1) {
     width: 7vh;
-    background-color: #801919;
+    /* background-color: #801919; */
     float: left;
     text-align: center;
 }
 
 #item-title div:nth-child(2) {
     float: left;
-    background-color: #175c94;
+    /* background-color: #175c94; */
     text-align: center;
     width: 43vw;
 }
@@ -194,7 +205,7 @@ h2 {
 
     width: 20vw;
     float: right;
-    background-color: #a12bae;
+    /* background-color: #a12bae; */
     text-align: center;
 }
 
@@ -213,7 +224,7 @@ h2 {
 
 .rank-mem {
     float: left;
-    margin-left: 2vw;
+    margin-left: 10vw;
 
     font-size: 5vw;
     overflow: hidden;

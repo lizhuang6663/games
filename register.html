@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>注册</title>
+    <link rel="stylesheet" href="//at.alicdn.com/t/c/font_4427063_761q8waz95y.css">
     <script src="js/function.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
@@ -110,17 +111,27 @@
         .female-text {
             margin-left: 20vh;
         }
+
+        .back {
+            width: 5vw;
+            height: 5vh;
+            position: absolute;
+            top: 3vh;
+            left: 3vw;
+        }
     </style>
 </head>
 
 <body>
     <!-- 最外层 -->
     <div class="wrap">
+        <div class="back"><i class="iconfont icon-back" style="font-size: 10vw; color: #73879c;"></i></div>
         <div class="center">
             <h1>账号注册</h1>
             <!-- 输入区 -->
             <div class="enter">
-                <input type="text" placeholder="请输入ID(不超过六位)" class="input-box" id="user-id">
+                <input type="text" placeholder="请输入ID(不超过六位)" class="input-box" id="user-id" type="number"
+                    maxlength="6">
                 <input type="password" placeholder="请输入密码(不超过六位)" class="input-box" maxlength="6" id="psw">
                 <i class="tip-box"></i>
                 <div class="gender-box">
@@ -142,27 +153,41 @@
 <script>
     window.onload = () => {
 
-        var registBtn = $(".regist-btn")
-        var tipBox = $('.tip-box')
+        let registBtn = $(".regist-btn")
+        let tipBox = $('.tip-box')
+        let backBox = $('.back')
 
-        function loginTurnToPage() {
-            var userId = Number($('#user-id').value)
-            var user_id = $('#user-id')
-            var password = $('#psw').value
-            var male = $('.male')
-            var female = $('.female')
+        //点击返回按钮返回登录界面
+        backBox.addEventListener('click', function () {
+            window.location.href = 'index.html'
+        })
 
 
+
+        //点击注册按钮执行registTurnToPage函数
+        registBtn.addEventListener('click', registTurnToPage)
+
+        //点击注册按钮判断用户输入数据跳转登录界面
+        function registTurnToPage() {
+
+            let userId = Number($('#user-id').value)
+            let user_id = $('#user-id')
+            let password = $('#psw').value
+            let male = $('.male')
+            let female = $('.female')
+
+            //记录用户选择的性别值
             if (male.checked) {
                 var gender = male.value
             } else if (female.checked) {
                 var gender = female.value
             }
 
-
-            if (!isNaN(userId) && userId !== 0 && password !== "") {
+            //判断用户id不为空不为0，密码不为空
+            if (!isNaN(userId) && userId !== 0) {
+                //用http连接发送注册数据
                 axios({
-                    url: 'http://172.20.10.3:8090/register',
+                    url: 'http://39.105.7.43:8090/register',
                     method: 'post',
                     data: {
                         "UserId": userId,
@@ -173,16 +198,17 @@
                 }).then(result => {
                     //获取成功
                     console.log(result)
+                    //出错情况
                     if (result.data.code == 409) {
                         console.log(result.data.error);
+                        //将出错情况写入提示框
                         tipBox.textContent = result.data.error
-
                     }
+                    //注册成功
                     if (result.data.code == 200) {
                         console.log("注册成功");
-
+                        //跳转登陆界面，用户可使用注册的账号登录
                         window.location.href = "index.html";
-
                     }
 
                 }).catch(error => {
@@ -194,9 +220,6 @@
             }
 
         }
-
-        registBtn.addEventListener('click', loginTurnToPage)
-
 
     }
 

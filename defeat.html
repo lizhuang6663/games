@@ -49,7 +49,7 @@
     <div class="whole-box">
         <img src="images/defeat.jpg" alt="" class="defeat">
         <div class="defeat-tip">很遗憾您在本次PK被击败</div>
-        <div class="o-score">rival score:</div>
+        <div class="o-score" style="display: none;">rival score:</div>
         <div class="y-score">your score:</div>
         <div class="sure">确定</div>
     </div>
@@ -61,10 +61,12 @@
     var yScore = $('.y-score')
     var oScore = $('.o-score')
 
+
     var currentScore = JSON.parse(localStorage.getItem('currentScore'))
     yScore.innerHTML = `your score:${currentScore}`
     var sure = $('.sure')
     sure.onclick = () => {
+        oScore.style.display = 'none'
         window.location.href = 'select.html'
     }
     var fightScore = JSON.parse(localStorage.getItem('fightScore'))

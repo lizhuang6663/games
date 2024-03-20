@@ -57,10 +57,13 @@
 
 </html>
 <script>
-    var vScore = $('.v-score')
-    var currentScore = JSON.parse(localStorage.getItem('currentScore'))
+    //将存储的得分放入分数盒子中
+    let vScore = $('.v-score')
+    let currentScore = JSON.parse(localStorage.getItem('currentScore'))
     vScore.innerHTML = `score:${currentScore}`
-    var sure = $('.sure')
+
+    //点击确定跳转选择界面
+    let sure = $('.sure')
     sure.onclick = () => {
         window.location.href = 'select.html'
     }
